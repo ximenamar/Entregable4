@@ -25,7 +25,7 @@ SECRET_KEY = '47gb&(44i#^g^s5b6s$m#4o429sl^jbted%3=!61n!)+rq9#&='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['murmuring-peak-60911.herokuapp.com']
 
 
 # Application definition
