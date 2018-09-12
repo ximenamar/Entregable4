@@ -1,0 +1,30 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <div class="jumbotron" >
+
+  <center class="container">  <h1 class="display-4 mb-5">Bienvenidos al Sistema de Gestión de Asesoría Web de la Universidad de Lima</h1>
+    <div>
+  </div>
+  <div class="">
+    {% load static %}
+    <img src="{% static 'images/icon.jpg' %}" alt="">
+  </div>
+    <p class="lead mb-5">Bienvenido, {{ user.username }}!</p>
+  </center>
+    <hr class="my-4 mb-5">
+    <div class="container ">
+    <p><i class="fas fa-angle-down mb-4"></i> Búsqueda de Asesoría</p>
+
+    <p><a href="{% url 'main:busqueda1' %}">Búsqueda de Asesoría por Filtros</a></p>
+    <p><a href="{% url 'main:busqueda2' %}">Búsqueda de Asesoría por Etiquetas</a></p>
+  </div>
+  <p><a href="{% url 'logout' %}">logout</a></p>
+
+  {% else %}
+  <p>No haz iniciado sesión.</p>
+  <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

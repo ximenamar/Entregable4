@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    <h1><center class="mt-5 mb-5">Búsqueda de Asesoría por Filtros</center></h1>
+    <form class="container">
+      <div class="form-inline ">
+        <div class="form-group mb-5 padre">
+          <div>
+            <i class="fas fa-search mr-2" ></i>
+            <input class="form-control" id="userProfesor"  placeholder="Nombre del Profesor">
+          </div>
+          <button type="submit" class="btn btn-secondary btn-lg">Buscar</button>
+        </div>
+
+      </div>
+      <div>
+        <h4 class="mb-5">Filtrar por:</h4>
+        <select class="custom-select my-1 mr-sm-2 mb-5" id="inlineFormCustomSelectPref">
+          <option selected>Carrera</option>
+          {% for carrera in lista_carreras %}
+          <option value="">{{ carrera.nombre_carrera }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div>
+        <select class="custom-select my-1 mr-sm-2 mb-5" id="inlineFormCustomSelectPref">
+          <option selected>Curso</option>
+          <option value="1">Depende de cada Carrera -- programar</option>
+        </select>
+      </div>
+    </form>
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,20 @@
+{% load staticfiles %}
+{% load bootstrap4 %}
+
+<head>
+    <meta charset="utf-8">
+    <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+</head>
+<body>
+<div class="container-fluid mt-3">
+    {% bootstrap_messages %}
+    {% block content %}
+        Sin contenido.
+    {% endblock %}
+</div>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+</body>
+</html>

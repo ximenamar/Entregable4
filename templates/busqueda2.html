@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% if user.is_authenticated %}
+  <h1><center class="mt-5 mb-5">Búsqueda de Asesoría por Etiqueta</center></h1>
+  <div class="container mt-3">
+    <h2>Etiquetas más buscadas:</h2>
+    <input class="form-control" id="myInput" type="text" placeholder="Inserta el hashtag..">
+    <br>
+    <ul class="list-group" id="myList">
+      <li class="list-group-item"><a href="#">#tesis</a></li>
+      <li class="list-group-item"><a href="#">#asesoria</a></li>
+      <li class="list-group-item"><a href="#">#grupal</a></li>
+      <li class="list-group-item"><a href="#">#ayuda</a></li>
+      <li class="list-group-item"><a href="#">#sistemas</a></li>
+    </ul>
+  </div>
+
+  <script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp
+  $(document).ready(function(){
+    $("#myInput").on("keyup", function() {
+      var value = $(this).val().toLowerCase();
+      $("#myList li").filter(function() {
+        $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+      });
+    });
+  });
+  </script>
+{% else %}
+  <p>No haz iniciado sesión.</p>
+  <a href="{% url 'login' %}">Iniciar Sesión</a>
+{% endif %}
+
+{% endblock %}

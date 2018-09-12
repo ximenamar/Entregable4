@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% load bootstrap4 %}
+
+{% block title %}Iniciar Sesión{% endblock %}
+
+{% block content %}
+<div class="container-fluid">
+  <div class="row">
+    <div class="col-md-4">
+    </div>
+    <div class="col-md-4">
+      <h2>Iniciar Sesión</h2>
+      <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        {% bootstrap_button "Ingresar" button_type="submit" button_class="btn-primary" %}
+        <a href="/inicio/signup">o regístrate</a>
+      </form>
+    </div>
+    <div class="col-md-4">
+    </div>
+  </div>
+
+</div>
+{% endblock %}
