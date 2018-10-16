@@ -1,6 +1,16 @@
 from django.db import models
 
 # Create your models here.
+class Profesor(models.Model):
+    nombre_profesor = models.CharField(max_length=200)
+    def __str__(self):
+        return self.nombre_profesor
+
+class Alumno(models.Model):
+    nombre_alumno = models.CharField(max_length=200)
+    def __str__(self):
+        return self.nombre_alumno
+
 class Seccion(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
     numero_seccion = models.CharField(max_length=200)
@@ -14,16 +24,6 @@ class Horario(object):
     fin = models.CharField(max_length=200)
     def __str__(self):
         return self.codigo_horario
-
-class Profesor(models.Model):
-    nombre_profesor = models.CharField(max_length=200)
-    def __str__(self):
-        return self.nombre_profesor
-
-class Alumno(models.Model):
-    nombre_alumno = models.CharField(max_length=200)
-    def __str__(self):
-        return self.nombre_alumno
 
 class Cita(models.Model):
     asesoria_simple = models.ForeignKey(asesoria_simple, on_delete=models.CASCADE)
