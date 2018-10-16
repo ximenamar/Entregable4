@@ -25,16 +25,6 @@ class Horario(object):
     def __str__(self):
         return self.codigo_horario
 
-class Cita(models.Model):
-    asesoria_simple = models.ForeignKey(asesoria_simple, on_delete=models.CASCADE)
-    asesoria_multiple = models.ForeignKey(asesoria_multiple, on_delete=models.CASCADE)
-    codigo_cita = models.CharField(max_length=200)
-    fecha = models.CharField(max_length=200)
-    razon = models.CharField(max_length=200)
-    lugar = models.CharField(max_length=200)
-    def __str__(self):
-        return self.codigo_cita
-
 class Asesoria_simple(models.Model):
     codigo_asesoria_simple = models.CharField(max_length=200)
     def __str__(self):
@@ -44,6 +34,16 @@ class Asesoria_multiple(models.Model):
     codigo_asesoria_multiple = models.CharField(max_length=200)
     def __str__(self):
         return self.codigo_asesoria_multiple
+
+class Cita(models.Model):
+    asesoria_simple = models.ForeignKey(asesoria_simple, on_delete=models.CASCADE)
+    asesoria_multiple = models.ForeignKey(asesoria_multiple, on_delete=models.CASCADE)
+    codigo_cita = models.CharField(max_length=200)
+    fecha = models.CharField(max_length=200)
+    razon = models.CharField(max_length=200)
+    lugar = models.CharField(max_length=200)
+    def __str__(self):
+        return self.codigo_cita
 
 class Etiqueta(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
