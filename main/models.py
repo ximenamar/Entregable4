@@ -65,14 +65,14 @@ class Carrera(models.Model):
 class Facultad(models.Model):
     carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
     seccion = models.ForeignKey(Seccion, on_delete=models.CASCADE)
-    nombre_facultad = models.CharField(max_length=200, null=True)
+    nombre_facultad = models.CharField(max_length=200, default='Facultad')
     def __str__(self):
         return self.nombre_facultad
 
 class Curso(models.Model):
     facultad = models.ForeignKey(Facultad, on_delete=models.CASCADE)
     seccion = models.ForeignKey(Seccion, on_delete=models.CASCADE)
-    nombre_curso = models.CharField(max_length=200, null=True)
+    nombre_curso = models.CharField(max_length=200, default='Curso')
     def __str__(self):
         return self.nombre_curso
 
