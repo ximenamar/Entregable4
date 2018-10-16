@@ -47,7 +47,7 @@ class Cita(models.Model):
 
 class Etiqueta(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
-    asesoria = models.ForeignKey(Asesoria, on_delete=models.CASCADE)
+    asesoria = models.ForeignKey(Asesoria_simple, on_delete=models.CASCADE)
     nombre_etiqueta = models.CharField(max_length=200)
     def __str__(self):
         return self.nombre_etiqueta
