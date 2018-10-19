@@ -17,7 +17,7 @@ class Seccion(models.Model):
     def __str__(self):
         return self.numero_seccion
 
-class Horario(object):
+class Horario(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
     codigo_horario = models.CharField(max_length=200, default='horario')
     inicio = models.CharField(max_length=200)
@@ -75,4 +75,3 @@ class Curso(models.Model):
     nombre_curso = models.CharField(max_length=200, default='Curso')
     def __str__(self):
         return self.nombre_curso
-
