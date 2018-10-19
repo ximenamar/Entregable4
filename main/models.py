@@ -29,7 +29,8 @@ class Cita_Simple(models.Model):
         return self.codigo_simple
 
 class Cita_Multiple(models.Model):
-    profesor_uno = models.ForeignKey(Profesor, on_delete=models.CASCADE)
+    profesor_uno = models.ForeignKey(Profesor, related_name='profesor_uno' ,on_delete=models.CASCADE)
+    profesor_dos = models.ForeignKey(Profesor, related_name='profesor_dos' ,on_delete=models.CASCADE)
     codigo_multiple = models.CharField(max_length=200, default='CitaM')
     hora_inicio = models.CharField(max_length=200)
     hora_fin = models.CharField(max_length=200)
