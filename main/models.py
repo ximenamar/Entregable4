@@ -17,61 +17,42 @@ class Seccion(models.Model):
     def __str__(self):
         return self.numero_seccion
 
-class Horario(models.Model):
+class Cita_Simple(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
-    codigo_horario = models.CharField(max_length=200, default='horario')
-    inicio = models.CharField(max_length=200)
-    fin = models.CharField(max_length=200)
-    def __str__(self):
-        return self.codigo_horario
-
-class Asesoria_simple(models.Model):
-    codigo_asesoria_simple = models.CharField(max_length=200, default='AseSim')
-    def __str__(self):
-        return self.codigo_asesoria_simple
-
-class Asesoria_multiple(models.Model):
-    codigo_asesoria_multiple = models.CharField(max_length=200, default='AseMul')
-    def __str__(self):
-        return self.codigo_asesoria_multiple
-
-class Cita(models.Model):
-    asesoria_simple = models.ForeignKey(Asesoria_simple, on_delete=models.CASCADE)
-    asesoria_multiple = models.ForeignKey(Asesoria_multiple, on_delete=models.CASCADE)
-    codigo_cita = models.CharField(max_length=200, default='Cita')
-    fecha = models.CharField(max_length=200)
+    codigo_simple = models.CharField(max_length=200, default='Cita')
+    hora_inicio = models.CharField(max_length=200)
+    hora_fin = models.CharField(max_length=200)
+    dia = models.CharField(max_length=200)
     razon = models.CharField(max_length=200)
     lugar = models.CharField(max_length=200)
     def __str__(self):
-        return self.codigo_cita
+        return self.codigo_simple
+
+class Cita_Multiple(models.Model):
+    profesor_uno = models.ForeignKey(Profesor, on_delete=models.CASCADE)
+    codigo_multiple = models.CharField(max_length=200, default='CitaM')
+    hora_inicio = models.CharField(max_length=200)
+    hora_fin = models.CharField(max_length=200)
+    dia = models.CharField(max_length=200)
+    razon = models.CharField(max_length=200)
+    lugar = models.CharField(max_length=200)
+    def __str__(self):
+        return self.codigo_multiple
 
 class Etiqueta(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
-    asesoria = models.ForeignKey(Asesoria_simple, on_delete=models.CASCADE)
+    asesoria = models.ForeignKey(Cita_Simple, on_delete=models.CASCADE)
     nombre_etiqueta = models.CharField(max_length=200, default='Etiqueta')
     def __str__(self):
         return self.nombre_etiqueta
-
-class Semestre(models.Model):
-    nombre_semestre = models.CharField(max_length=200, default='Semestre')
-    def __str__(self):
-        return self.nombre_semestre
 
 class Carrera(models.Model):
     nombre_carrera = models.CharField(max_length=200, default='Carrera')
     def __str__(self):
         return self.nombre_carrera
 
-class Facultad(models.Model):
-    carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
-    seccion = models.ForeignKey(Seccion, on_delete=models.CASCADE)
-    nombre_facultad = models.CharField(max_length=200, default='Facultad')
-    def __str__(self):
-        return self.nombre_facultad
-
 class Curso(models.Model):
-    facultad = models.ForeignKey(Facultad, on_delete=models.CASCADE)
-    seccion = models.ForeignKey(Seccion, on_delete=models.CASCADE)
-    nombre_curso = models.CharField(max_length=200, default='Curso')
+    carrera = models.ForeignKey(Carrera, on_delete=models.CASCADE)
+    nombre_curso = models.CharField(max_length=200, null=True)
     def __str__(self):
         return self.nombre_curso
