@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <h1><center class="mt-5 mb-5">Cita Reservada</center></h1>
+
+<div class="container">
+    {% for asesoria in asesoria_sel %}
+    <p>
+      {{asesoria}}
+
+      Dia: {{cita.dia}}
+
+
+      Lugar: {{cita.lugar}}
+
+
+    
+      Hora: {{cita.hora_inicio}} - {{cita.hora_fin}}
+    </p>
+
+    {% endfor %}
+
+<button onclick="reservaSel()" class="btn btn-secondary btn-lg">Reservar cita </button>
+
+</div>
+
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

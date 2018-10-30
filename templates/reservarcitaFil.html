@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <h1><center class="mt-5 mb-5">Reservar Cita</center></h1>
+
+<div class="container">
+    {% for nombre in profesor_sel %}
+    {% for cita in nombre.profesor %}
+
+
+    <input id="cita" type="radio" name="cita" onclick="obtener_cita({{cita}})"  />
+
+      {{cita.profesor__nombre_profesor}}
+    <p>
+      Dia: {{cita.dia}}
+    </p>
+
+    <p>
+      Lugar: {{cita.lugar}}
+    </p>
+
+    <p>
+      Hora: {{cita.hora_inicio}} - {{cita.hora_fin}}
+    </p>
+
+
+    {% endfor %}
+    {% endfor %}
+
+<button onclick="reservaSel()" class="btn btn-secondary btn-lg">Reservar cita </button>
+
+</div>
+
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

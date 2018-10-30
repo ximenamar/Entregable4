@@ -11,12 +11,6 @@ class Alumno(models.Model):
     def __str__(self):
         return self.nombre_alumno
 
-class Seccion(models.Model):
-    profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
-    numero_seccion = models.CharField(max_length=200, default='Seccion')
-    def __str__(self):
-        return self.numero_seccion
-
 class Cita_Simple(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
     codigo_simple = models.CharField(max_length=200, default='Cita')
@@ -42,7 +36,6 @@ class Cita_Multiple(models.Model):
 
 class Etiqueta(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
-    asesoria = models.ForeignKey(Cita_Simple, on_delete=models.CASCADE)
     nombre_etiqueta = models.CharField(max_length=200, default='Etiqueta')
     def __str__(self):
         return self.nombre_etiqueta
@@ -57,3 +50,12 @@ class Curso(models.Model):
     nombre_curso = models.CharField(max_length=200, null=True)
     def __str__(self):
         return self.nombre_curso
+
+class Asesoria(models.Model):
+    profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
+    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    razon = models.CharField(max_length=200, null=True)
+    hora_inicio = models.CharField(max_length=200)
+    hora_fin = models.CharField(max_length=200)
+    razon = models.CharField(max_length=200, null=True)
+    estado = models. CharField(max_length=200, null=True)

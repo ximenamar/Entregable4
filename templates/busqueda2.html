@@ -8,11 +8,9 @@
     <input class="form-control" id="myInput" type="text" placeholder="Inserta el hashtag..">
     <br>
     <ul class="list-group" id="myList">
-      <li class="list-group-item"><a href="#">#tesis</a></li>
-      <li class="list-group-item"><a href="#">#asesoria</a></li>
-      <li class="list-group-item"><a href="#">#grupal</a></li>
-      <li class="list-group-item"><a href="#">#ayuda</a></li>
-      <li class="list-group-item"><a href="#">#sistemas</a></li>
+      {% for etiquetas in lista_etiquetas %}
+      <li class="list-group-item" id="etiqueta" onclick="buscarEtiqueta()"><a href="{{ etiquetas.nombre_etiqueta }}">#{{ etiquetas.nombre_etiqueta }}</a></li>
+      {% endfor %}
     </ul>
   </div>
 

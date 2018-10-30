@@ -8,16 +8,20 @@
         <div class="form-group mb-5 padre">
           <div>
             <i class="fas fa-search mr-2" ></i>
-            <input class="form-control" id="userProfesor"  placeholder="Nombre del Profesor">
+            {% for profesor in profesor_sel %}
+            <input class="form-control" id="userProfesor" value="{{ profesor.nombre_profesor }}">
+            {% endfor %}
           </div>
-          <p onclick="validar()" class="btn btn-secondary btn-lg">Buscar</p>
+          <p onclick="mandarBusqueda()" class="btn btn-secondary btn-lg">Buscar</p>
         </div>
 
       </div>
       <div>
         <h4 class="mb-5">Filtrar por:</h4>
         <select id="sel" onchange="getElements()" class="custom-select my-1 mr-sm-2 mb-5" id="inlineFormCustomSelectPref">
-          <option selected>Carrera</a></option>
+          {% for carrera in carrera_sel %}
+          <option selected>{{ carrera.nombre_carrera }}</a></option>
+          {% endfor %}
           {% for carrera in lista_carreras %}
           <option id="{{carrera.nombre_carrera}}"> {{ carrera.nombre_carrera }}</option>
           {% endfor %}
@@ -27,10 +31,10 @@
 
       {% endfor %}
       <div>
-        <select class="custom-select my-1 mr-sm-2 mb-5" id="inlineFormCustomSelectPref">
+        <select id="cur" onchange="buscar1()" class="custom-select my-1 mr-sm-2 mb-5" id="inlineFormCustomSelectPref">
           <option selected>Curso</option>
           {% for curso in lista_cursos %}
-          <option value="{{curso.id}}">{{ curso.nombre_curso }}</option>
+          <option value="{{ curso.nombre_curso }}">{{ curso.nombre_curso }}</option>
           {% endfor %}
         </select>
       </div>
