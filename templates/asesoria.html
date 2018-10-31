@@ -2,27 +2,31 @@
 
 {% block content %}
   {% if user.is_authenticated %}
-  <h1><center class="mt-5 mb-5">Cita Reservada</center></h1>
+  {% for asesoria in asesoria_sel %}
+  <h1><center class="mt-5 mb-5">{{asesoria.alumno__nombre_alumno}}, su reserva está {{asesoria.estado}}</center></h1>
 
 <div class="container">
-    {% for asesoria in asesoria_sel %}
+
     <p>
-      {{asesoria}}
-
-      Dia: {{cita.dia}}
-
-
-      Lugar: {{cita.lugar}}
-
-
-    
-      Hora: {{cita.hora_inicio}} - {{cita.hora_fin}}
+      Profesor: {{asesoria.profesor__nombre_profesor}}
+    </p>
+    <p>
+      Dia: {{asesoria.dia}}
+    </p>
+    <p>
+      Lugar: {{asesoria.lugar}}
+    </p>
+    <p>
+      Hora: {{asesoria.hora_inicio}} - {{asesoria.hora_fin}}
+    </p>
+    <p>
+      Razón: {{asesoria.razon}}
     </p>
 
     {% endfor %}
-
-<button onclick="reservaSel()" class="btn btn-secondary btn-lg">Reservar cita </button>
-
+<div>
+<button onclick="reservaCancel()" class="btn btn-secondary btn-lg">Cancelar </button>
+</div>
 </div>
 
   {% else %}

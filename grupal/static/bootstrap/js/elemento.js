@@ -1,9 +1,10 @@
-
-
-function get_url(){
+function get_url(usu){
+let usuario = usu
 let url = window.location.href;
+
+console.log(usuario)
 sessionStorage.setItem("busq1", url);
-console.log(url)
+sessionStorage.setItem("usu", usuario);
 }
 
 
@@ -54,8 +55,9 @@ if (nombre_profesor == ""){
 }
 
 function obtener_cita(citaHtml){
-var cita = citaHtml
-var elementos = "asesoria/"+ cita.profesor__nombre_profesor+"/"+cita.dia+"/"+cita.lugar+"/"+cita.hora_inicio+"/"+cita.hora_fin;
+var cita = citaHtml;
+var alumno = sessionStorage.getItem("usu");
+var elementos = "asesoria/"+ cita.profesor__nombre_profesor+"/"+alumno+"/"+cita.dia+"/"+cita.lugar+"/"+cita.hora_inicio+"/"+cita.hora_fin;
 var url = sessionStorage.getItem("busq1");
 var url = url + elementos ;
 let busqueda = url;
@@ -66,4 +68,8 @@ console.log(busqueda)
 function reservaSel(){
 var url = sessionStorage.getItem("bd");
 window.location.replace(url)
+}
+
+function reservaCancel(asesoria){
+
 }

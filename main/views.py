@@ -4,7 +4,7 @@ from django.shortcuts import render
 from django.views import generic
 from django.template import loader
 from collections import deque
-from .models import Carrera, Curso, Profesor, Cita_Simple, Etiqueta, Asesoria
+from .models import Carrera, Curso, Profesor, Cita_Simple, Etiqueta, Asesoria, Alumno
 
 #Inicio de Funciones
 def princ(request):
@@ -69,22 +69,40 @@ def busqueda2_real(request, etiq):
     }
     return render(request, "reservarcitaFil.html", contexto)
 
-def citaReservada(request, prof, dia, lugar, inicio, fin):
-
+def citaReservada(request, prof, alum, dia, lugar, inicio, fin):
+    """
     conn = psycopg2.connect("host=localhost dbname=mydatabase user=postgres")
     cur = conn.cursor()
     cur.execute("INSERT INTO Asesoria VALUES (%s, %s, %s, %s)", (prof, dia, lugar, inicio, fin))
     conn.commit()
+    """
+    '''CREA ALUMNO'''
+    alumno = Alumno.objects.values('nombre_alumno').filter(nombre_alumno = alum).distinct()
+    alumnoCreado = ""
+    for a in alumno:
+        alumnoCreado= a["nombre_alumno"]
+    print(alumnoCreado)
+    if alum != alumnoCreado:
+        al = Alumno(nombre_alumno=alum);
+        al.save();
+    '''CREA CITA'''
 
+    alumnoAse = Alumno.objects.only('nombre_alumno').filter(nombre_alumno = alum).get()
+    profesorAse = Profesor.objects.only('nombre_profesor').filter(nombre_profesor = prof).get()
+    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum).distinct()
+    asesoriaCreada = ""
 
+    for i in asesoria:
+        asesoriaCreada= i["asesoria"]
 
+    if asesoriaCreada != prof+alum:
+        p = Asesoria(asesoria=prof+alum,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
+        p.save()
+
+    '''Mostrar Asesoria Creada'''
     seleccion = {prof, dia, lugar, inicio, fin}
-    asesoria = []
-    print(asesoria)
-    for a in seleccion:
-        asesoria.append({'profesor' : prof })
-    print(seleccion)
+    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum).distinct()
     contexto = {
-       "asesoria_sel": asesoria,
+       "asesoria_sel": asesoriaDatos,
     }
     return render(request, "asesoria.html", contexto)

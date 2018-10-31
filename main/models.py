@@ -17,7 +17,6 @@ class Cita_Simple(models.Model):
     hora_inicio = models.CharField(max_length=200)
     hora_fin = models.CharField(max_length=200)
     dia = models.CharField(max_length=200)
-    razon = models.CharField(max_length=200)
     lugar = models.CharField(max_length=200)
     def __str__(self):
         return self.codigo_simple
@@ -52,10 +51,14 @@ class Curso(models.Model):
         return self.nombre_curso
 
 class Asesoria(models.Model):
+    asesoria = models.CharField(max_length=200, default='Asesoria')
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
     alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
-    razon = models.CharField(max_length=200, null=True)
+    dia = models.CharField(max_length=200, null=True)
+    lugar= models.CharField(max_length=200, null=True)
     hora_inicio = models.CharField(max_length=200)
     hora_fin = models.CharField(max_length=200)
     razon = models.CharField(max_length=200, null=True)
     estado = models. CharField(max_length=200, null=True)
+    def __str__(self):
+        return self.asesoria
