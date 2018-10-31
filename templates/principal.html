@@ -12,14 +12,14 @@
     {% load static %}
     <img src="{% static 'images/icon.jpg' %}" alt="">
   </div>
-    <p class="lead mb-5">Bienvenido, {{ user.username }}!</p>
+    <p class="lead mb-5">¡Bienvenido, <br id="alumno"> {{ user.username }}!</br></p>
   </center>
     <hr class="my-4 mb-5">
     <div class="container ">
     <p><i class="fas fa-angle-down mb-4"></i> Búsqueda de Asesoría</p>
 
-    <p onclick="get_url()"><a href="{% url 'main:busqueda1' %}" >Búsqueda de Asesoría por Filtros</a></p>
-    <p onclick="get_url()"><a href="{% url 'main:busqueda2' %}">Búsqueda de Asesoría por Etiquetas</a></p>
+    <p onclick="get_url('{{user.username}}')"><a href="{% url 'main:busqueda1' %}" >Búsqueda de Asesoría por Filtros</a></p>
+    <p onclick="get_url('{{user.username}}')"><a href="{% url 'main:busqueda2' %}">Búsqueda de Asesoría por Etiquetas</a></p>
   </div>
   <p><a href="{% url 'logout' %}">logout</a></p>
 
