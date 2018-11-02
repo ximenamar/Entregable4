@@ -3,12 +3,12 @@
 {% block content %}
   {% if user.is_authenticated %}
   {% for asesoria in asesoria_sel %}
-  <h1><center class="mt-5 mb-5">{{asesoria.alumno__nombre_alumno}}, su reserva está {{asesoria.estado}}</center></h1>
+  <h1><center class="mt-5 mb-5">{{asesoria.profesor__nombre_profesor}}, esta reserva está {{asesoria.estado}}</center></h1>
 
 <div class="container">
 
     <p>
-      Profesor: {{asesoria.profesor__nombre_profesor}}
+      Alumno: {{asesoria.alumno__nombre_alumno}}
     </p>
     <p>
       Dia: {{asesoria.dia}}
@@ -25,9 +25,9 @@
 
 
 
-<button onclick="reservaCancel({{asesoria}})" class="btn btn-secondary btn-lg">Cancelar </button>
-<button onclick="retornar('{{asesoria.alumno__nombre_alumno}}')" class="btn btn-secondary btn-lg"> Ver más Citas </button>
-<button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al Inicio </button>
+<button onclick="reservaAceptar({{asesoria}})" class="btn btn-secondary btn-lg">Aceptar </button>
+<button onclick="regresar('{{asesoria.profesor__nombre_profesor}}')" class="btn btn-secondary btn-lg"> Ver más citas </button>
+<button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
   {% endfor %}
 </div>
 

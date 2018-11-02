@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <h1><center class="mt-5 mb-5">Modificar Asesoria</center></h1>
+
+<div class="container">
+
+    {% for cita in lista_citas %}
+    <p>Profesor:</p>
+    <p id="sel">
+    {{cita.profesor__nombre_profesor}}
+    <p>
+      Hora de Inicio: <input class="form-control" id="inicio" value="{{cita.hora_inicio}}">
+    </p>
+    <p>
+      Hora de Termino: <input class="form-control" id="fin" value="{{cita.hora_fin}}">
+    </p>
+    <p>
+      Día: <input class="form-control" id="dia" value="{{cita.dia}}">
+    </p>
+    <p>
+      Lugar: <input class="form-control" id="lugar" value="{{cita.lugar}}">
+    </p>
+
+  <button onclick="modificarHo({{cita}})" class="btn btn-secondary btn-lg">Modificar </button>
+  <button onclick="regresarA()" class="btn btn-secondary btn-lg"> Regresar </button>
+  <button onclick="inicioA()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+  {% endfor %}
+</div>
+
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

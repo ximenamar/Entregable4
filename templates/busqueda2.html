@@ -5,13 +5,16 @@
   <h1><center class="mt-5 mb-5">Búsqueda de Asesoría por Etiqueta</center></h1>
   <div class="container mt-3">
     <h2>Etiquetas más buscadas:</h2>
-    <input class="form-control" id="myInput" type="text" placeholder="Inserta el hashtag..">
+    <input class="form-control" id="myInput" type="text" placeholder="Inserta el hashtag...">
     <br>
     <ul class="list-group" id="myList">
       {% for etiquetas in lista_etiquetas %}
       <li class="list-group-item" id="etiqueta" onclick="buscarEtiqueta()"><a href="{{ etiquetas.nombre_etiqueta }}">#{{ etiquetas.nombre_etiqueta }}</a></li>
       {% endfor %}
     </ul>
+    <br>
+    <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+    </br>
   </div>
 
   <script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp

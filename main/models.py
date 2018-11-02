@@ -1,6 +1,10 @@
 from django.db import models
 
-# Create your models here.
+class Administrador(models.Model):
+    nombre_administrador = models.CharField(max_length=200, default='Profesor')
+    def __str__(self):
+        return self.nombre_administrador
+
 class Profesor(models.Model):
     nombre_profesor = models.CharField(max_length=200, default='Profesor')
     def __str__(self):

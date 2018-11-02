@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <body onload="crearProf('{{user.first_name}}')">
+  <div class="jumbotron" >
+
+  <center class="container">  <h1 class="display-4 mb-5">Bienvenido al Sistema de Gestión de Asesoría Web de la Universidad de Lima</h1>
+    <div>
+  </div>
+  <div class="">
+    {% load static %}
+    <img src="{% static 'images/Ulima.png' %}" alt="">
+  </div>
+    <br>
+    <p class="lead mb-5">¡Bienvenido, Profesor <br id="alumno"> {{ user.first_name }}!</br></p>
+    </br>
+  </center>
+    <hr class="my-4 mb-5">
+    <div class="container ">
+    <i class="fas fa-angle-down mb-4"></i> Gestionar Asesorías
+    <br>
+    <button onclick="get_prof('{{user.first_name}}')"> Ver asesorías</button>
+    </br>
+    </div>
+  <br>
+  <div class="container">
+  <p><a href="{% url 'logout' %}">logout</a></p>
+  </div>
+  </br>
+  {% else %}
+  <p>No haz iniciado sesión.</p>
+  <a href="{% url 'login' %}">Iniciar Sesión</a>
+  </body>
+  {% endif %}
+{% endblock %}

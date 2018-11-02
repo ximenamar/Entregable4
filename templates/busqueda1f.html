@@ -3,7 +3,7 @@
 {% block content %}
   {% if user.is_authenticated %}
     <h1><center class="mt-5 mb-5">Búsqueda de Asesoría por Filtros</center></h1>
-    <form action="/" method="post" class="container">{% csrf_token %}
+    <div action="/" method="post" class="container">{% csrf_token %}
       <div class="form-inline ">
         <div class="form-group mb-5 padre">
           <div>
@@ -38,7 +38,11 @@
           {% endfor %}
         </select>
       </div>
-    </form>
+      <br>
+      <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+      </br>
+    </div>
+
   {% else %}
     <p>No haz iniciado sesión.</p>
     <a href="{% url 'login' %}">Iniciar Sesión</a>

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <h1><center class="mt-5 mb-5">Crear Asesoria</center></h1>
+
+<div class="container">
+
+    <select id="sel" class="custom-select my-1 mr-sm-2 mb-5" id="inlineFormCustomSelectPref">
+      <option selected>Profesor</a></option>
+      {% for profesor in lista_profesores %}
+      <option id="{{profesor.nombre}}"> {{ profesor.nombre}}</option>
+      {% endfor %}
+    </select>
+
+    <p>
+      Hora de Inicio: <input class="form-control" id="inicio" placeholder="ej. 9am">
+    </p>
+    <p>
+      Hora de Termino: <input class="form-control" id="fin" placeholder="ej. 12pm">
+    </p>
+    <p>
+      Día: <input class="form-control" id="dia" placeholder="ej. Lunes">
+    </p>
+    <p>
+      Lugar: <input class="form-control" id="lugar" placeholder="ej. Ta-piso8">
+    </p>
+
+
+
+
+  <button onclick="adminAse()" class="btn btn-secondary btn-lg">Crear </button>
+  <button onclick="inicioA()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+</div>
+
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

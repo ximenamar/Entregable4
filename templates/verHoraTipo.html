@@ -1,0 +1,61 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+
+  <h1><center class="mt-5 mb-5">Gestionar Horarios</center></h1>
+  {% for selVer in seleccion %}
+  <p><h3>{{selVer}}</h3></p>
+  {% endfor %}
+<input class="form-control" id="myInput" type="text" placeholder="Filtrar...">
+<div class="container" name="cita">
+
+<ul class="list-group" id="myList">
+
+
+
+    {% for cita in lista_citas %}
+    <br>
+    <span>
+    <li class="list-group-item" id="horaio">
+    <p>
+      Profesor:{{cita.profesor__nombre_profesor}}
+    </p>
+    <p>
+      Dia: {{cita.dia}}
+    </p>
+
+    <p>
+      Lugar: {{cita.lugar}}
+    </p>
+
+    <p>
+      Hora: {{cita.hora_inicio}} - {{cita.hora_fin}}
+    </p>
+    <button onclick="mostrarMod({{cita}})" class="btn btn-secondary btn-lg">Modificar</button>
+    <button onclick="eliminarHo({{cita}})" class="btn btn-secondary btn-lg">Eliminar</button>
+    </li>
+    {% endfor %}
+    </span>
+    </br>
+
+  </ul>
+    <button onclick="inicioA()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+    <button onclick="regresarA()" class="btn btn-secondary btn-lg"> Regresar </button>
+
+</div>
+<script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myList li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

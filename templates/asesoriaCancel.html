@@ -25,9 +25,10 @@
 
 
 
-<button onclick="reservaCancel({{asesoria}})" class="btn btn-secondary btn-lg">Cancelar </button>
-<button onclick="retornar('{{asesoria.alumno__nombre_alumno}}')" class="btn btn-secondary btn-lg"> Ver más Citas </button>
-<button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al Inicio </button>
+<button onclick="reservaCancel('{{asesoria.asesoria}}')" class="btn btn-secondary btn-lg"> Cancelar </button>
+<button onclick="reservaReAceptar({{asesoria}})" class="btn btn-secondary btn-lg"> Pedir Nuevamente </button>
+<button onclick="retornar('{{asesoria.alumno__nombre_alumno}}')" class="btn btn-secondary btn-lg"> Ver más citas </button>
+<button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
   {% endfor %}
 </div>
 

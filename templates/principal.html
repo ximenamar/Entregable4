@@ -3,6 +3,7 @@
 
 {% block content %}
   {% if user.is_authenticated %}
+  <body onload="getTipo('{{ user.last_name}}')">
   <div class="jumbotron" >
 
   <center class="container">  <h1 class="display-4 mb-5">Bienvenidos al Sistema de Gestión de Asesoría Web de la Universidad de Lima</h1>
@@ -12,19 +13,23 @@
     {% load static %}
     <img src="{% static 'images/icon.jpg' %}" alt="">
   </div>
-    <p class="lead mb-5">¡Bienvenido, <br id="alumno"> {{ user.username }}!</br></p>
+    <p class="lead mb-5">¡Bienvenido, <br id="alumno"> {{ user.first_name}}!</br></p>
   </center>
     <hr class="my-4 mb-5">
     <div class="container ">
+    <p><i class="fas fa-angle-down mb-4"></i> Gestionar Asesorías</p>
+    <p onclick="get_usu('{{user.first_name}}')"><a href="#" >Ver asesorías con los profesores </a></p>
+    </div>
+    <div class="container ">
     <p><i class="fas fa-angle-down mb-4"></i> Búsqueda de Asesoría</p>
-
-    <p onclick="get_url('{{user.username}}')"><a href="{% url 'main:busqueda1' %}" >Búsqueda de Asesoría por Filtros</a></p>
-    <p onclick="get_url('{{user.username}}')"><a href="{% url 'main:busqueda2' %}">Búsqueda de Asesoría por Etiquetas</a></p>
-  </div>
+    <p onclick="get_url('{{user.first_name}}')"><a href="{% url 'main:busqueda1' %}" >Búsqueda de Asesoría por Filtros</a></p>
+    <p onclick="get_url('{{user.first_name}}')"><a href="{% url 'main:busqueda2' %}">Búsqueda de Asesoría por Etiquetas</a></p>
+    </div>
   <p><a href="{% url 'logout' %}">logout</a></p>
 
   {% else %}
   <p>No haz iniciado sesión.</p>
   <a href="{% url 'login' %}">Iniciar Sesión</a>
   {% endif %}
+  </body>
 {% endblock %}

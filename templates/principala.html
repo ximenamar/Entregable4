@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <body onload="crearAdmin('{{ user.first_name}}')">
+  <div class="jumbotron" >
+
+  <center class="container">  <h1 class="display-4 mb-5">Bienvenidos al Sistema de Gestión de Asesoría Web de la Universidad de Lima</h1>
+    <div>
+  </div>
+  <div class="">
+    {% load static %}
+    <img src="{% static 'images/admin.png' %}" alt="" style="width:155px;height:150px;">
+  </div>
+    <p class="lead mb-5">¡Bienvenido administrador, <br id="alumno"> {{ user.first_name}}!</br></p>
+  </center>
+    <hr class="my-4 mb-5">
+    <div class="container ">
+    <p><i class="fas fa-angle-down mb-4"></i> Gestionar Asesorías</p>
+    <p onclick="crearAse('{{user.first_name}}')"><a href="#" >Crear asesorías para los profesores</a></p>
+    <p onclick="queVer()"><a href="#">Gestionar asesorías de los profesores </a></p>
+    </div>
+
+
+  <p><a href="{% url 'logout' %}">logout</a></p>
+
+  {% else %}
+  <p>No haz iniciado sesión.</p>
+  <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+  </body>
+{% endblock %}
