@@ -7,7 +7,9 @@
   {% for selVer in seleccion %}
   <p><h3>{{selVer}}</h3></p>
   {% endfor %}
-<input class="form-control" id="myInput" type="text" placeholder="Filtrar...">
+  {% for selImp in filtrado %}
+<input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{selImp}}">
+  {% endfor %}
 <div class="container" name="cita">
 
 <ul class="list-group" id="myList">
@@ -19,7 +21,7 @@
     <span>
     <li class="list-group-item" id="horaio">
     <p>
-      Profesor:{{cita.profesor__nombre_profesor}}
+      Profesor: {{cita.profesor__nombre_profesor}}
     </p>
     <p>
       Dia: {{cita.dia}}
@@ -40,8 +42,9 @@
     </br>
 
   </ul>
-    <button onclick="inicioA()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
     <button onclick="regresarA()" class="btn btn-secondary btn-lg"> Regresar </button>
+    <button onclick="inicioA()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+
 
 </div>
 <script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp

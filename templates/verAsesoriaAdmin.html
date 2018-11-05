@@ -4,7 +4,9 @@
   {% if user.is_authenticated %}
 
   <h1><center class="mt-5 mb-5">Gestionar Horarios</center></h1>
-<input class="form-control" id="myInput" type="text" placeholder="Filtra por profesor">
+  {% for selVer in filtrado %}
+<input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{ selVer}} ">
+{% endfor %}
 <div class="container" name="cita">
 
 <ul class="list-group" id="myList">
@@ -12,7 +14,7 @@
     <br>
     <span>
     <li class="list-group-item" id="horaio">
-    {{ cita.dia}}{{ cita.profesor__nombre_profesor}}
+    {{ cita.dia}}{{ cita.profesor__nombre_profesor}} 
     <button onclick="mostrarHora({{cita}})" class="btn btn-secondary btn-lg">Ver Horarios</button>
     </li>
     {% endfor %}

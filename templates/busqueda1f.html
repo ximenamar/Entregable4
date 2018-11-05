@@ -12,7 +12,6 @@
             <input class="form-control" id="userProfesor" value="{{ profesor.nombre_profesor }}">
             {% endfor %}
           </div>
-          <p onclick="mandarBusqueda()" class="btn btn-secondary btn-lg">Buscar</p>
         </div>
 
       </div>
@@ -39,6 +38,7 @@
         </select>
       </div>
       <br>
+      <button onclick="mandarBusqueda('{{user.first_name}}')" class="btn btn-secondary btn-lg">Buscar</button>
       <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
       </br>
     </div>

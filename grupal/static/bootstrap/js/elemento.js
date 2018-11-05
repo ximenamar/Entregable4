@@ -17,7 +17,19 @@ var url = sessionStorage.getItem("urlProf");
 
 function inicio(){
 var url = sessionStorage.getItem("busq1");
-window.location.replace(url)
+window.location.replace(url);
+}
+
+function regresarFilt(){
+var url = sessionStorage.getItem("busq1");
+var url = url +"busqueda1/";
+window.location.replace(url);
+}
+
+function regresarEtiq(){
+var url = sessionStorage.getItem("busq1");
+var url = url +"busqueda2/";
+window.location.replace(url);
 }
 
 function get_url(usu){
@@ -60,7 +72,7 @@ let busqueda = url;
 sessionStorage.setItem("bd", busqueda);
 }
 
-function mandarBusqueda(){
+function mandarBusqueda(usu){
 var nombre_profesor = document.getElementById('userProfesor').value;
 var curso = document.getElementById('cur').value;
 console.log(curso)
@@ -70,7 +82,8 @@ if (nombre_profesor == ""){
   swal("¡Espere!", 'Porfavor seleccione el curso', "warning");
 }else{
     var url = sessionStorage.getItem("bd");
-    window.location.replace(url)
+    var url = url +"/" +usu;
+    window.location.replace(url);
 }
 
 }
@@ -100,15 +113,22 @@ console.log(busqueda)
 }
 
 function reservaSel(){
+//var no = [];
+//document.getElementById('no').innerHTML = no[0];
+
+console.log(no);
 var url = sessionStorage.getItem("bd");
 var reusar = "#"
+
+//if (no[0] == "") {
+//  swal("¡Error!", 'No existen asesorías', "error");
+//}
 if (url != "#"){
   sessionStorage.setItem("bd",reusar)
   window.location.replace(url)
 }else{
   swal("¡Espere!", 'Porfavor seleccione la asesoría', "warning");
 }
-
 }
 
 function aceptar(){
@@ -391,8 +411,6 @@ function mostrarHora(cita){
     window.location.replace(url);
   }
 
-
-
 }
 
 function inicioA(){
@@ -499,9 +517,16 @@ function eliminarHo(cita){
 }
 
 function mostrarMod(cita){
+  let main = window.location.href;
+  sessionStorage.setItem("reg2",main);
   var url = sessionStorage.getItem("urlProf");
   var url = url + "a/modAse/"+cita.codigo_simple;
   window.location.replace(url);
+}
+
+function  regresarAM(){
+var url = sessionStorage.getItem("reg2");
+window.location.replace(url)
 }
 
 function modificarHo(cita){

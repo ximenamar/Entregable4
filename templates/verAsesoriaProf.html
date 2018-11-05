@@ -10,13 +10,15 @@
     {% for asesoria in lista_asesorias %}
     {% if asesoria != "" %}
     <br>
-
+    <li class="list-group-item" id="asesoria">
     <span>
-    {{ asesoria.alumno__nombre_alumno}}
+    <p>Día: {{ asesoria.dia}}</p>
+    Alumno: {{ asesoria.alumno__nombre_alumno}}
     <button onclick="mostrarAsesoriaProf({{asesoria}})" class="btn btn-secondary btn-lg">Gestionar</button>
     Estado: {{ asesoria.estado}}
     </span>
-    </br>
+    </li>
+  
 
     {% else %}
     <p>No hay asesorias para mostrar</p>

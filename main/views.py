@@ -11,10 +11,14 @@ def princ(request):
     return render(request, 'principal.html')
 
 def ver(request, alum):
-     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','estado').filter(alumno__nombre_alumno = alum )
-     print(asesoria)
+     imprimir = ""
+     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','estado').filter(alumno__nombre_alumno = alum ).order_by('dia')
+     cant =  Asesoria.objects.values('profesor__nombre_profesor').filter(alumno__nombre_alumno = alum).count()
+     if cant == 0:
+         imprimir = [alum+", no has reservado ninguna asesoría"]
      contexto = {
-        "lista_asesorias": asesoria
+        "lista_asesorias": asesoria,
+        "noAse": imprimir
      }
      return render(request, "verAsesoria.html", contexto)
 
@@ -39,41 +43,67 @@ def busqueda1_Cu(request, ca, prof):
      return render(request, "busqueda1f.html", contexto)
 
 
-def busqueda1_real(request, car, profe, cur):
-
+def busqueda1_real(request, car, profe, cur, usu):
+    aseProf = Asesoria.objects.values('profesor__nombre_profesor').filter(alumno__nombre_alumno = usu).distinct().exclude(estado="Cancelada")
+    aseDia = Asesoria.objects.values('dia').filter(alumno__nombre_alumno = usu).exclude(estado="Cancelada")
+    print(aseProf)
+    nombre = ""
+    profCita = ""
     profesor = Cita_Simple.objects.values('profesor__nombre_profesor').filter(profesor__nombre_profesor= profe)
-    print(profesor)
-    nombre = []
+    cant = Cita_Simple.objects.values('profesor__nombre_profesor').filter(profesor__nombre_profesor= profe).exclude(profesor__nombre_profesor__in= aseProf,dia__in=aseDia).count()
+    if cant == 0:
+        nombre = ["No existe ningún horario disponible del profesor "+profe +" con los filtros de curso: "+ cur+ " y carrera: " + car+"."]
+    print(cant)
+    a = [""]
+    selImp= []
+    for i in a:
+        selImp.append(profe)
+
     for a in profesor:
-        profCita = Cita_Simple.objects.values('profesor__nombre_profesor','dia', 'lugar','hora_inicio', 'hora_fin').filter(profesor__nombre_profesor = a['profesor__nombre_profesor'])
-        nombre.append({'profesor' : profCita})
-    #print(nombre)
-    if profesor != None:
-        contexto = {
-            "profesor_sel": profCita,
-        }
-        return render(request, "reservarcita.html", contexto)
-    else:
-        return render(request, "reservarcita.html")
+        profCita = Cita_Simple.objects.values('profesor__nombre_profesor','dia', 'lugar','hora_inicio', 'hora_fin').filter(profesor__nombre_profesor = a['profesor__nombre_profesor']).order_by('dia').exclude(profesor__nombre_profesor__in= aseProf,dia__in=aseDia)
+
+    contexto = {
+        "profesor_sel": profCita,
+        "noExiste": nombre,
+        "prof": selImp
+    }
+    return render(request, "reservarcita.html", contexto)
+
 
 def busq2(request):
-    etiquetas = Etiqueta.objects.values('nombre_etiqueta').distinct()
+    etiquetas = Etiqueta.objects.values('nombre_etiqueta').distinct().order_by('nombre_etiqueta')
     contexto = {
        "lista_etiquetas": etiquetas
     }
     return render(request, 'busqueda2.html', contexto)
 
 
-def busqueda2_real(request, etiq):
+def busqueda2_real(request, etiq, usu):
     etiquetas = Etiqueta.objects.values('nombre_etiqueta').filter(nombre_etiqueta = etiq).distinct()
     profesor = Etiqueta.objects.values('profesor__nombre_profesor').filter(nombre_etiqueta = etiq)
+    aseProf = Asesoria.objects.values('profesor__nombre_profesor').filter(alumno__nombre_alumno = usu).distinct().exclude(estado="Cancelada")
+    aseDia = Asesoria.objects.values('dia').filter(alumno__nombre_alumno = usu).exclude(estado="Cancelada")
+    print(aseProf)
+    print(aseDia)
     nombre = []
+    imp = []
+    cant = Cita_Simple.objects.values('profesor__nombre_profesor').filter(profesor__nombre_profesor__in= profesor).exclude(profesor__nombre_profesor__in= aseProf,dia__in=aseDia).count()
+    print(cant)
+    imprimir= [""]
     for a in profesor:
-        profCita = Cita_Simple.objects.values('profesor__nombre_profesor','dia', 'lugar','hora_inicio', 'hora_fin').filter(profesor__nombre_profesor = a['profesor__nombre_profesor'])
+        profCita = Cita_Simple.objects.values('profesor__nombre_profesor','dia', 'lugar','hora_inicio', 'hora_fin').filter(profesor__nombre_profesor = a['profesor__nombre_profesor']).order_by('dia').exclude(profesor__nombre_profesor__in= aseProf,dia__in=aseDia)
         nombre.append({'profesor' : profCita})
-    print(nombre)
+
+    for a in imprimir:
+        imp.append(etiq.capitalize())
+
+    if cant == 0:
+        imprimir = ["No existen horarios disponibles de los profesores con etiqueta "+etiq]
+
     contexto = {
        "profesor_sel": nombre,
+       "etiq_sel": imp,
+       "noExiste": imprimir
     }
     return render(request, "reservarcitaFil.html", contexto)
 
@@ -91,19 +121,20 @@ def citaReservada(request, prof, alum, dia, lugar, inicio, fin):
 
     alumnoAse = Alumno.objects.only('nombre_alumno').filter(nombre_alumno = alum).get()
     profesorAse = Profesor.objects.only('nombre_profesor').filter(nombre_profesor = prof).get()
-    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum).distinct()
+    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum+dia).distinct()
     asesoriaCreada = ""
 
     for i in asesoria:
         asesoriaCreada= i["asesoria"]
 
-    if asesoriaCreada != prof+alum:
-        p = Asesoria(asesoria=prof+alum,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
+    if asesoriaCreada != prof+alum+dia:
+        p = Asesoria(asesoria=prof+alum+dia,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
         p.save()
-
+    else:
+        Asesoria.objects.filter(asesoria=prof+alum+dia).update(estado = "pendiente a aceptar")
     '''Mostrar Asesoria Creada'''
     seleccion = {prof, dia, lugar, inicio, fin}
-    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum).distinct()
+    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum+dia).distinct()
     contexto = {
        "asesoria_sel": asesoriaDatos,
     }
@@ -123,19 +154,19 @@ def citaReservadaCancel(request, prof, alum, dia, lugar, inicio, fin, estado):
 
     alumnoAse = Alumno.objects.only('nombre_alumno').filter(nombre_alumno = alum).get()
     profesorAse = Profesor.objects.only('nombre_profesor').filter(nombre_profesor = prof).get()
-    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum).distinct()
+    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum+dia).distinct()
     asesoriaCreada = ""
 
     for i in asesoria:
         asesoriaCreada= i["asesoria"]
 
-    if asesoriaCreada != prof+alum:
-        p = Asesoria(asesoria=prof+alum,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
+    if asesoriaCreada != prof+alum+dia:
+        p = Asesoria(asesoria=prof+alum+dia,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
         p.save()
 
     '''Mostrar Asesoria Creada'''
     seleccion = {prof, dia, lugar, inicio, fin}
-    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum).distinct()
+    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum+dia).distinct()
     contexto = {
        "asesoria_sel": asesoriaDatos,
     }
@@ -155,7 +186,7 @@ def citaCancelar(request, asesoria):
 
 #Inicio Funciones Profesor
 def verProf(request, prof):
-     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(profesor__nombre_profesor = prof )
+     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(profesor__nombre_profesor = prof ).order_by('estado')
      print(asesoria)
      contexto = {
         "lista_asesorias": asesoria
@@ -163,33 +194,23 @@ def verProf(request, prof):
      return render(request, "verAsesoriaProf.html", contexto)
 
 def citaReservadaProf(request, prof, alum, dia, lugar, inicio, fin):
-    '''CREA Profesor
-    alumno = Alumno.objects.values('nombre_alumno').filter(nombre_alumno = alum).distinct()
-    alumnoCreado = ""
-    for a in alumno:
-        alumnoCreado= a["nombre_alumno"]
-    print(alumnoCreado)
-    if alum != alumnoCreado:
-        al = Alumno(nombre_alumno=alum);
-        al.save();
-    '''
     '''CREA CITA'''
 
     alumnoAse = Alumno.objects.only('nombre_alumno').filter(nombre_alumno = alum).get()
     profesorAse = Profesor.objects.only('nombre_profesor').filter(nombre_profesor = prof).get()
-    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum).distinct()
+    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum+dia).distinct()
     asesoriaCreada = ""
 
     for i in asesoria:
         asesoriaCreada= i["asesoria"]
 
-    if asesoriaCreada != prof+alum:
-        p = Asesoria(asesoria=prof+alum,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
+    if asesoriaCreada != prof+alum+dia:
+        p = Asesoria(asesoria=prof+alum+dia,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
         p.save()
 
     '''Mostrar Asesoria Creada'''
     seleccion = {prof, dia, lugar, inicio, fin}
-    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum).distinct()
+    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum+dia).distinct()
     contexto = {
        "asesoria_sel": asesoriaDatos,
     }
@@ -208,19 +229,19 @@ def citaNoAceptar(request, asesoria):
 def citaReservadaProfCancel(request, prof, alum, dia, lugar, inicio, fin, estado):
     alumnoAse = Alumno.objects.only('nombre_alumno').filter(nombre_alumno = alum).get()
     profesorAse = Profesor.objects.only('nombre_profesor').filter(nombre_profesor = prof).get()
-    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum).distinct()
+    asesoria = Asesoria.objects.values('asesoria').filter(asesoria = prof+alum+dia).distinct()
     asesoriaCreada = ""
 
     for i in asesoria:
         asesoriaCreada= i["asesoria"]
 
-    if asesoriaCreada != prof+alum:
-        p = Asesoria(asesoria=prof+alum,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
+    if asesoriaCreada != prof+alum+dia:
+        p = Asesoria(asesoria=prof+alum+dia,profesor=profesorAse,alumno=alumnoAse,dia=dia,lugar=lugar,hora_inicio=inicio,hora_fin=fin,razon="Tesis",estado="pendiente a aceptar")
         p.save()
 
     '''Mostrar Asesoria Creada'''
     seleccion = {prof, dia, lugar, inicio, fin}
-    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum).distinct()
+    asesoriaDatos = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum+dia).distinct()
     contexto = {
        "asesoria_sel": asesoriaDatos,
     }
@@ -282,33 +303,50 @@ def crearCita_simple(request, prof, inicio, fin, dia, lugar, cod):
     return HttpResponse(resp)
 
 def verAse(request, tipo):
+    imprimir = "día"
+    selVer = []
+    a = [""]
     if tipo == "prof":
-        cita = Cita_Simple.objects.values('profesor__nombre_profesor').distinct()
+        cita = Cita_Simple.objects.values('profesor__nombre_profesor').distinct().order_by('profesor__nombre_profesor')
+        imprimir = "profesor"
     else:
-        cita = Cita_Simple.objects.values('dia').distinct()
+        cita = Cita_Simple.objects.values('dia').distinct().order_by('dia')
+
+    for i in a:
+        selVer.append(imprimir)
+
     contexto = {
-        "lista_citas": cita
+        "lista_citas": cita,
+        "filtrado": selVer
      }
     return render(request, "verAsesoriaAdmin.html", contexto)
 
 def verAseFil(request, sel):
-    citaProf = Cita_Simple.objects.values('profesor__nombre_profesor','codigo_simple','hora_inicio','hora_fin','dia','lugar').filter(profesor__nombre_profesor=sel)
-    citaDia = Cita_Simple.objects.values('profesor__nombre_profesor','codigo_simple','hora_inicio','hora_fin','dia','lugar').filter(dia=sel)
+    citaProf = Cita_Simple.objects.values('profesor__nombre_profesor','codigo_simple','hora_inicio','hora_fin','dia','lugar').filter(profesor__nombre_profesor=sel).order_by('dia')
+    citaDia = Cita_Simple.objects.values('profesor__nombre_profesor','codigo_simple','hora_inicio','hora_fin','dia','lugar').filter(dia=sel).order_by('profesor__nombre_profesor')
     noneProf = citaProf.count()
     noneDia = citaDia.count()
+    
     selVer = []
     a = [""]
+    selImp= []
+    imprimir = "profesor"
     for i in a:
         selVer.append(sel)
 
-    print(selVer)
-    if noneProf != 0:
+    if noneProf != 0 and noneDia==0:
         cita = citaProf
+        imprimir = "día"
     else:
         cita = citaDia
+
+    for i in a:
+        selImp.append(imprimir)
+
     contexto = {
         "lista_citas": cita,
-        "seleccion": selVer
+        "seleccion": selVer,
+        "filtrado": selImp
     }
     return render(request, "verHoraTipo.html", contexto)
 

@@ -6,7 +6,7 @@
   <h1><center class="mt-5 mb-5">{{asesoria.alumno__nombre_alumno}}, su reserva está {{asesoria.estado}}</center></h1>
 
 <div class="container">
-
+    <li class="list-group-item" id="horaio">
     <p>
       Profesor: {{asesoria.profesor__nombre_profesor}}
     </p>
@@ -22,12 +22,13 @@
     <p>
       Razón: {{asesoria.razon}}
     </p>
+    </li>
 
-
-
+<br>
 <button onclick="reservaCancel({{asesoria}})" class="btn btn-secondary btn-lg">Cancelar </button>
 <button onclick="retornar('{{asesoria.alumno__nombre_alumno}}')" class="btn btn-secondary btn-lg"> Ver más Citas </button>
 <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al Inicio </button>
+</br>
   {% endfor %}
 </div>
 

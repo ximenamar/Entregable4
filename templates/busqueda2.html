@@ -9,7 +9,7 @@
     <br>
     <ul class="list-group" id="myList">
       {% for etiquetas in lista_etiquetas %}
-      <li class="list-group-item" id="etiqueta" onclick="buscarEtiqueta()"><a href="{{ etiquetas.nombre_etiqueta }}">#{{ etiquetas.nombre_etiqueta }}</a></li>
+      <li class="list-group-item" id="etiqueta" ><a href="{{ etiquetas.nombre_etiqueta }}/{{user.first_name}}">#{{ etiquetas.nombre_etiqueta }}</a></li>
       {% endfor %}
     </ul>
     <br>

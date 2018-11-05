@@ -1,37 +1,43 @@
 {% extends 'base.html' %}
-
 {% block content %}
   {% if user.is_authenticated %}
-  <h1><center class="mt-5 mb-5">Reservar Cita</center></h1>
-
+  <h1><center class="mt-5 mb-5">Horarios para Reservar</center></h1>
 <div class="container">
+    {% for imp in etiq_sel %}
+    <p>
+    <h3>{{imp}}</h3>
+    </p>
+    {% endfor %}
+    {% for imprimir in noExiste %}
+    <p id="no">
+    {{imprimir}}
+    </p>
+    {% endfor %}
     {% for nombre in profesor_sel %}
     {% for cita in nombre.profesor %}
-
-
-    <input id="cita" type="radio" name="cita" onclick="obtener_cita({{cita}})"  />
-
+      <li class="list-group-item" id="horaio">
+    <input id="cita" type="radio"  name="cita" onclick="obtener_cita({{cita}})"  />
       {{cita.profesor__nombre_profesor}}
     <p>
       Dia: {{cita.dia}}
     </p>
-
     <p>
       Lugar: {{cita.lugar}}
     </p>
-
     <p>
       Hora: {{cita.hora_inicio}} - {{cita.hora_fin}}
     </p>
+    </li>
+    <br>
 
 
-    {% endfor %}
-    {% endfor %}
+{% endfor %}
+{% endfor %}
 
 <button onclick="reservaSel()" class="btn btn-secondary btn-lg">Reservar cita </button>
+<button onclick="regresarEtiq()" class="btn btn-secondary btn-lg"> Regresar </button>
 <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
 </div>
-
   {% else %}
     <p>No haz iniciado sesión.</p>
     <a href="{% url 'login' %}">Iniciar Sesión</a>
