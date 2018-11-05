@@ -186,7 +186,7 @@ def citaCancelar(request, asesoria):
 
 #Inicio Funciones Profesor
 def verProf(request, prof):
-     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(profesor__nombre_profesor = prof ).order_by('estado')
+     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(profesor__nombre_profesor = prof ).order_by('estado').exclude(estado = "Cancelada")
      print(asesoria)
      contexto = {
         "lista_asesorias": asesoria
@@ -326,7 +326,7 @@ def verAseFil(request, sel):
     citaDia = Cita_Simple.objects.values('profesor__nombre_profesor','codigo_simple','hora_inicio','hora_fin','dia','lugar').filter(dia=sel).order_by('profesor__nombre_profesor')
     noneProf = citaProf.count()
     noneDia = citaDia.count()
-    
+
     selVer = []
     a = [""]
     selImp= []

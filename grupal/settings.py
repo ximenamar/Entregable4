@@ -78,7 +78,7 @@ WSGI_APPLICATION = 'grupal.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.1/ref/settings/#databases
 
-'''
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -102,7 +102,7 @@ DATABASES = {
         'PORT': '5432',
     }
 }
-
+'''
 # Password validation
 # https://docs.djangoproject.com/en/2.1/ref/settings/#auth-password-validators
 
@@ -146,7 +146,7 @@ STATICFILES_DIRS = [
 
 STATIC_URL = '/static/'
 
-LOGIN_REDIRECT_URL = '/principal/'
+LOGIN_REDIRECT_URL = '/redirect/'
 LOGOUT_REDIRECT_URL = 'login'
 
 django_heroku.settings(locals())

@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <body onload="getTipo('{{ user.last_name}}')">
+  redireccionando...
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+  </body>
+{% endblock %}

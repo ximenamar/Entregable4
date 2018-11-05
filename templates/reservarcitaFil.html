@@ -6,13 +6,14 @@
     {% for imp in etiq_sel %}
     <p>
     <h3>{{imp}}</h3>
-    </p>
+
     {% endfor %}
     {% for imprimir in noExiste %}
-    <p id="no">
+    <p id="a">
     {{imprimir}}
     </p>
     {% endfor %}
+    </p>
     {% for nombre in profesor_sel %}
     {% for cita in nombre.profesor %}
       <li class="list-group-item" id="horaio">
@@ -33,8 +34,9 @@
 
 {% endfor %}
 {% endfor %}
-
-<button onclick="reservaSel()" class="btn btn-secondary btn-lg">Reservar cita </button>
+{% for imprimir in noExiste %}
+<button onclick="reservaSelE('{{imprimir}}')" class="btn btn-secondary btn-lg">Reservar cita </button>
+{% endfor %}
 <button onclick="regresarEtiq()" class="btn btn-secondary btn-lg"> Regresar </button>
 <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
 </div>

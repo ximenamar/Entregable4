@@ -20,6 +20,7 @@ from main import views
 
 urlpatterns = [
     path('principal/', include('main.urls')),
+    path('redirect/', TemplateView.as_view(template_name='redirect.html'), name='redireccionar'),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('admin/', admin.site.urls),
     path('inicio/', include('accounts.urls')),

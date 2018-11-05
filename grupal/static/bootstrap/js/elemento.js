@@ -1,18 +1,36 @@
-//Sesion
+//Sesión
+function getBase(){
+  let base = window.location.href;
+  let main = base.split("inicio/login/")
+  sessionStorage.setItem("urlProf",main[0]+ "principal");
+}
 
 function getTipo(tipo){
-let main = window.location.href;
-sessionStorage.setItem("urlProf",main);
-var url = sessionStorage.getItem("urlProf");
+  var url = sessionStorage.getItem("urlProf");
 
   if (tipo == "profesor") {
-    var url = url+"p/"
+    var url = url+"/p/"
     window.location.replace(url);
   }else if (tipo == "administrador") {
-    var url = url+"a/"
+    var url = url+"/a/"
+    window.location.replace(url);
+  }else {
     window.location.replace(url);
   }
 }
+//Notificaciones
+function noti(user){
+
+  console.log(user);
+  swal({
+    title: "Sesión iniciada",
+    icon: "success",
+    position: " 'top-right'",
+    button: false,
+    timer: 3000
+  })
+}
+
 //Alumno
 
 function inicio(){
@@ -112,24 +130,44 @@ sessionStorage.setItem("bd", busqueda);
 console.log(busqueda)
 }
 
-function reservaSel(){
-//var no = [];
-//document.getElementById('no').innerHTML = no[0];
+function restaurarBD(){
+  var reusar = "#"
+  sessionStorage.setItem("bd",reusar)
+}
 
+function reservaSel(){
+var no = [];
+var or = document.getElementById("no");
+no.push(or);
 console.log(no);
 var url = sessionStorage.getItem("bd");
 var reusar = "#"
-
-//if (no[0] == "") {
-//  swal("¡Error!", 'No existen asesorías', "error");
-//}
-if (url != "#"){
+if (no[0] != null) {
+  swal("¡Error!", 'No existen asesorías', "error");
+}else if (url != "#"){
   sessionStorage.setItem("bd",reusar)
   window.location.replace(url)
 }else{
   swal("¡Espere!", 'Porfavor seleccione la asesoría', "warning");
 }
 }
+
+function reservaSelE(no){
+var noE = [no];
+console.log(noE);
+var url = sessionStorage.getItem("bd");
+var reusar = "#"
+
+if (noE[0] != "") {
+  swal("¡Error!", 'No existen asesorías', "error");
+}else if (url != "#"){
+  sessionStorage.setItem("bd",reusar)
+  window.location.replace(url)
+}else{
+  swal("¡Espere!", 'Porfavor seleccione la asesoría', "warning");
+}
+}
+
 
 function aceptar(){
   var url = sessionStorage.getItem("busq1");
