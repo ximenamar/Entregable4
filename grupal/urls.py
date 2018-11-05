@@ -25,7 +25,7 @@ urlpatterns = [
     path('inicio/', include('accounts.urls')),
     path('inicio/', include('django.contrib.auth.urls')),
     #Profesor
-    path('principal/p/', TemplateView.as_view(template_name='principalp.html')),
+    path('principal/p/', TemplateView.as_view(template_name='principalP.html')),
     path('principal/p/ver/<str:prof>', views.verProf , name='ver'),
     path('principal/p/asesoria/<str:prof>/<str:alum>/<str:dia>/<str:lugar>/<str:inicio>/<str:fin>', views.citaReservadaProf , name='citaProfVer'),
     path('principal/p/asesoria/<str:prof>/<str:alum>/<str:dia>/<str:lugar>/<str:inicio>/<str:fin>/<str:estado>', views.citaReservadaProfCancel , name='citaProfVer'),
