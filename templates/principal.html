@@ -3,7 +3,7 @@
 
 {% block content %}
   {% if user.is_authenticated %}
-<body onload="noti('{{user.first_name}}')">
+<body onload="noti('{{user.first_name}}','{{user.last_name}}')">
   <div class="jumbotron" >
 
   <center class="container">  <h1 class="display-4 mb-5">Bienvenidos al Sistema de Gestión de Asesoría Web de la Universidad de Lima</h1>

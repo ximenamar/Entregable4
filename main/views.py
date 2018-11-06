@@ -12,7 +12,7 @@ def princ(request):
 
 def ver(request, alum):
      imprimir = ""
-     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','estado').filter(alumno__nombre_alumno = alum ).order_by('dia')
+     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','estado').filter(alumno__nombre_alumno = alum ).order_by('estado','dia')
      cant =  Asesoria.objects.values('profesor__nombre_profesor').filter(alumno__nombre_alumno = alum).count()
      if cant == 0:
          imprimir = [alum+", no has reservado ninguna asesoría"]
@@ -186,7 +186,7 @@ def citaCancelar(request, asesoria):
 
 #Inicio Funciones Profesor
 def verProf(request, prof):
-     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(profesor__nombre_profesor = prof ).order_by('estado').exclude(estado = "Cancelada")
+     asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(profesor__nombre_profesor = prof ).order_by('estado','dia').exclude(estado = "Cancelada")
      print(asesoria)
      contexto = {
         "lista_asesorias": asesoria
