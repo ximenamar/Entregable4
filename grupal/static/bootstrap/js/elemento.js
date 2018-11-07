@@ -163,7 +163,7 @@ if (nombre_profesor == ""){
   swal("¡Espere!", 'Porfavor escribe el profesor', "warning");
 
 }else{
-  swal("¡Espere!", 'Porfavor seleccione los dos filtros', "warning");
+  swal("¡Espere, seleccione una carrera!", 'Para ver los cursos...', "warning");
 }
 }
 
