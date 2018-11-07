@@ -5,15 +5,40 @@
 
 {% block content %}
 
-    <h4>Crear cuenta</h4>
+<h4>Crear cuenta</h4>
 
-    <form method="post">
+<form method="post" action='/inicio/registrarse/'>
 
-        {% csrf_token %}
-        {% bootstrap_form form %}
-        
-        <button class="btn btn-success">Crear</button>
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="usuario1">Usuario</label>
+    <input type="email" class="form-control" id="usuario1" placeholder="Ingrese aquí su usuario" name="usuario">
+  </div>
+  <div class="form-group">
+    <label for="nombre1">Nombre y Apellidos</label>
+    <input class="form-control" id="nombre1" placeholder="Ingrese aquí su nombre y apellido" name="nombre">
+  </div>
+  <div class="form-group">
+    <label for="exampleInputPassword1">Contraseña</label>
+    <input type="password" class="form-control" id="contra1" placeholder="Ingrese aquí su contraseña" name="contra">
+  </div>
+  <div class="form-group">
+    <label for="select1" >Seleccione su tipo de usuario</label>
+    <select class="form-control" id="select1" name="tipo">
+      <option>estudiante</option>
+      <option>profesor</option>
+      <option>administrador</option>
+    </select>
+  </div>
+  <button onclick="crear()" type="submit" class="btn btn-success">Crear</button>
 
-    </form>
+</form>
 
+{% if messages == "Completa todos los campos" %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
 {% endblock %}
