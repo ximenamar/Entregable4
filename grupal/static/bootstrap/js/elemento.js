@@ -97,11 +97,35 @@ window.location.replace(ver);
 
 function getElements(){
 var nombre_profesor = document.getElementById('userProfesor').value
+console.log(nombre_profesor);
 var carrera = document.getElementById('sel').value
 var elementos = "busqueda1/"+ carrera + '/' + nombre_profesor;
 var url = sessionStorage.getItem("busq1");
 var url = url + elementos ;
-window.location.replace(url)
+if (nombre_profesor != "") {
+  window.location.replace(url)
+}else {
+  const swalWithBootstrapButtons = swal.mixin({
+    confirmButtonClass: 'btn btn-success',
+    cancelButtonClass: 'btn btn-danger',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    allowOutsideClick: true,
+  })
+  swalWithBootstrapButtons({
+    title: '¡Espere!',
+    text: 'Escriba el profesor',
+    type: 'warning',
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'ok'
+  }).then((result) => {
+    if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+      location.reload();
+    }
+  })
+
+}
+
 }
 
 function buscar1(){

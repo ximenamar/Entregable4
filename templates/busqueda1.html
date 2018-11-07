@@ -25,14 +25,7 @@
       {% for carrera in lista_carreras %}
 
       {% endfor %}
-      <div>
-        <select class="custom-select my-1 mr-sm-2 mb-5" id="inlineFormCustomSelectPref">
-          <option selected>Curso</option>
-          {% for curso in lista_cursos %}
-          <option value="{{curso.id}}">{{ curso.nombre_curso }}</option>
-          {% endfor %}
-        </select>
-      </div>
+
       <br>
       <button onclick="validar()" class="btn btn-secondary btn-lg">Buscar</button>
       <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
