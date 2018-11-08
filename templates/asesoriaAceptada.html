@@ -1,0 +1,42 @@
+{% extends 'a5.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  {% for asesoria in asesoria_sel %}
+  <body onload="aseR('{{user.first_name}}','{{user.last_name}}',{{asesoria}})">
+
+  <h1><center class="mt-5 mb-5">{{asesoria.alumno__nombre_alumno}}, su reserva está {{asesoria.estado}}</center></h1>
+
+<div class="container">
+    <li class="list-group-item" id="horaio">
+    <p>
+      Profesor: {{asesoria.profesor__nombre_profesor}}
+    </p>
+    <p>
+      Dia: {{asesoria.dia}}
+    </p>
+    <p>
+      Lugar: {{asesoria.lugar}}
+    </p>
+    <p>
+      Hora: {{asesoria.hora_inicio}} - {{asesoria.hora_fin}}
+    </p>
+    <p>
+      Razón: {{asesoria.razon}}
+    </p>
+    </li>
+
+<br>
+<button onclick="reservaCancel({{asesoria}})" class="btn btn-secondary btn-lg">Cancelar </button>
+<button onclick="retornar('{{asesoria.alumno__nombre_alumno}}')" class="btn btn-secondary btn-lg"> Ver más Citas </button>
+<button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al Inicio </button>
+</br>
+  {% endfor %}
+</div>
+
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+</body>
+{% endblock %}

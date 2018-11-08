@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'a6.html' %}
 
 {% block content %}
   {% if user.is_authenticated %}
@@ -6,7 +6,7 @@
   <h1><center class="mt-5 mb-5">{{asesoria.profesor__nombre_profesor}}, esta reserva está {{asesoria.estado}}</center></h1>
 
 <div class="container">
-
+    <li class="list-group-item" id="horaio">
     <p>
       Alumno: {{asesoria.alumno__nombre_alumno}}
     </p>
@@ -22,9 +22,9 @@
     <p>
       Razón: {{asesoria.razon}}
     </p>
+    </li>
 
-
-
+<br>
 <button onclick="reservaAceptar({{asesoria}})" class="btn btn-secondary btn-lg">Aceptar </button>
 <button onclick="regresar('{{asesoria.profesor__nombre_profesor}}')" class="btn btn-secondary btn-lg"> Ver más citas </button>
 <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>

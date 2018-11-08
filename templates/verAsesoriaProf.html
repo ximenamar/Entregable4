@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'a3.html' %}
 
 {% block content %}
   {% if user.is_authenticated %}
@@ -18,7 +18,7 @@
     Estado: {{ asesoria.estado}}
     </span>
     </li>
-  
+
 
     {% else %}
     <p>No hay asesorias para mostrar</p>

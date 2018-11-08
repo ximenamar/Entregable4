@@ -5,7 +5,22 @@ from django.views import generic
 from django.template import loader
 from collections import deque
 from .models import *
+import pusher
+#Notificaciones
 
+def noti(request):
+    return render(request, "a.html")
+
+def swal(request):
+    pusher_client = pusher.Pusher(
+      app_id='641815',
+      key='088d8d55c84743f48c36',
+      secret='86e8e73a4178e10bc7a9',
+      cluster='us2',
+      ssl=True
+    )
+
+    pusher_client.trigger('my-channel', 'my-event', {'message': 'hello world'})
 #Inicio de Funciones Alumno
 def princ(request):
     return render(request, 'principal.html')
@@ -20,6 +35,15 @@ def ver(request, alum):
         "lista_asesorias": asesoria,
         "noAse": imprimir
      }
+     #Para actualizar las vistas
+     pusher_client = pusher.Pusher(
+     app_id='642894',
+     key='83777adac1c4e636cd80',
+     secret='6f59983b4b6fb9481554',
+     cluster='us2',
+     ssl=True
+     )
+     pusher_client.trigger('my-channel', 'my-event','aceptada')
      return render(request, "verAsesoria.html", contexto)
 
 def busqueda1(request):
@@ -138,6 +162,26 @@ def citaReservada(request, prof, alum, dia, lugar, inicio, fin):
     contexto = {
        "asesoria_sel": asesoriaDatos,
     }
+    #actualiza vista profesor
+    ase= Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum+dia).get()
+    pusher_client = pusher.Pusher(
+    app_id='642931',
+    key='2294181343cebed3aeea',
+    secret='52ba0b81bfd139a56c20',
+    cluster='us2',
+    ssl=True
+    )
+
+    pusher_client.trigger('my-channel', 'my-event',ase)
+    #Manda Notificaciones al profesore
+    pusher_client = pusher.Pusher(
+    app_id='642947',
+    key='25d751d0250a1bbbf28b',
+    secret='d3ae50e6f9ee8c211be0',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
     return render(request, "asesoria.html", contexto)
 
 def citaReservadaCancel(request, prof, alum, dia, lugar, inicio, fin, estado):
@@ -172,17 +216,86 @@ def citaReservadaCancel(request, prof, alum, dia, lugar, inicio, fin, estado):
     }
     return render(request, "asesoriaCancel.html", contexto)
 
+def citaReservadaAceptada(request, prof, alum, dia, lugar, inicio, fin, estado):
+    asesoria = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum+dia).distinct()
+    contexto = {
+       "asesoria_sel": asesoria,
+    }
+    return render(request, "asesoriaAceptada.html", contexto)
+
+def citaReservadaSinAceptadar(request, prof, alum, dia, lugar, inicio, fin, estado):
+    asesoria = Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = prof+alum+dia).distinct()
+    contexto = {
+       "asesoria_sel": asesoria,
+    }
+    return render(request, "asesoriaAceptada.html", contexto)
+
 def citaReCrear(request, asesoria):
     a = asesoria
     Asesoria.objects.filter(asesoria=a).update(estado = "pendiente a aceptar")
+    ase = Asesoria.objects.values('alumno__nombre_alumno','profesor__nombre_profesor','estado','dia','lugar','hora_inicio','hora_fin').filter(asesoria = a).get()
+    #Actualiza las vistas Profesor
+    pusher_client = pusher.Pusher(
+    app_id='642931',
+    key='2294181343cebed3aeea',
+    secret='52ba0b81bfd139a56c20',
+    cluster='us2',
+    ssl=True
+    )
+
+    pusher_client.trigger('my-channel', 'my-event',ase)
+    #Manda Notificaciones al profesore
+    pusher_client = pusher.Pusher(
+    app_id='642947',
+    key='25d751d0250a1bbbf28b',
+    secret='d3ae50e6f9ee8c211be0',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
+
     return HttpResponse("")
 
 def citaCancelar(request, asesoria):
     a = asesoria
+    ase= Asesoria.objects.values('asesoria','profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(asesoria = a).get()
+    prof = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno').filter(asesoria = a).get()
+
+    #actualiza las vistas Porfesor
+    pusher_client = pusher.Pusher(
+    app_id='642931',
+    key='2294181343cebed3aeea',
+    secret='52ba0b81bfd139a56c20',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
     Asesoria.objects.filter(asesoria=a).delete()
+    #actualiza las vistas del detalle del profesor
+    pusher_client = pusher.Pusher(
+    app_id='643084',
+    key='7a7e9159031b98a76d93',
+    secret='3d56d18b46833ff92fd0',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
+
+
+
+    #Notifica al profesor
+    pusher_client = pusher.Pusher(
+    app_id='642947',
+    key='25d751d0250a1bbbf28b',
+    secret='d3ae50e6f9ee8c211be0',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',{"prof": prof['profesor__nombre_profesor'], "alum": prof['alumno__nombre_alumno'], "estatus":"0"})
+
+
+
     return HttpResponse("")
-
-
 
 #Inicio Funciones Profesor
 def verProf(request, prof):
@@ -219,11 +332,68 @@ def citaReservadaProf(request, prof, alum, dia, lugar, inicio, fin):
 def citaAceptar(request, asesoria):
     a = asesoria
     Asesoria.objects.filter(asesoria=a).update(estado = "aceptada")
+    ase = Asesoria.objects.values('alumno__nombre_alumno','profesor__nombre_profesor','estado','dia','lugar','hora_inicio','hora_fin').filter(asesoria = a).get()
+    #MNotificaciones al alumno
+    pusher_client = pusher.Pusher(
+      app_id='641815',
+      key='088d8d55c84743f48c36',
+      secret='86e8e73a4178e10bc7a9',
+      cluster='us2',
+      ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event', ase)
+    #actualiza la vista alumno
+    pusher_client = pusher.Pusher(
+    app_id='642894',
+    key='83777adac1c4e636cd80',
+    secret='6f59983b4b6fb9481554',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
+    #actualiza la vista de detalles del alumno
+    pusher_client = pusher.Pusher(
+    app_id='642983',
+    key='9022786e650c83d9e11f',
+    secret='9deebca47bceb88120d6',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
     return HttpResponse("")
 
 def citaNoAceptar(request, asesoria):
     a = asesoria
     Asesoria.objects.filter(asesoria=a).update(estado = "Cancelada")
+    ase = Asesoria.objects.values('alumno__nombre_alumno','profesor__nombre_profesor','estado','dia','lugar','hora_inicio','hora_fin').filter(asesoria = a).get()
+    #Notificaciones al alumno
+    pusher_client = pusher.Pusher(
+      app_id='641815',
+      key='088d8d55c84743f48c36',
+      secret='86e8e73a4178e10bc7a9',
+      cluster='us2',
+      ssl=True
+    )
+
+    pusher_client.trigger('my-channel', 'my-event', ase)
+    #Actualiza ventana de alumno
+    pusher_client = pusher.Pusher(
+    app_id='642894',
+    key='83777adac1c4e636cd80',
+    secret='6f59983b4b6fb9481554',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
+    #alctualiza ventana abrta al ver detalles para no incumplir con los asesoriaDatos
+    pusher_client = pusher.Pusher(
+    app_id='642983',
+    key='9022786e650c83d9e11f',
+    secret='9deebca47bceb88120d6',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
     return HttpResponse("")
 
 def citaReservadaProfCancel(request, prof, alum, dia, lugar, inicio, fin, estado):

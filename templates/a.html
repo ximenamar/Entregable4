@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+{% load bootstrap4 %}
+<head>
+  <meta charset="utf-8">
+  <link href="{% static 'bootstrap/css/bootstrap.min.css' %}" rel="stylesheet">
+  <link href="{% static 'css/styles.css' %}" rel="stylesheet">
+  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" integrity="sha384-/rXc/GQVaYpyDdyxK+ecHPVYJSN9bmVFBvjA/9eOB+pb3F2w2N6fc5qB9Ew5yIns" crossorigin="anonymous">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+  <script src="https://js.pusher.com/4.3/pusher.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@7.28.11/dist/sweetalert2.all.min.js"></script>
+  <script>
+
+    // Enable pusher logging - don't include this in production
+    //Pusher.logToConsole = true;
+
+    var pusher = new Pusher('088d8d55c84743f48c36', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+      const inicio = swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: true,
+        confirmButtonText: 'Ver',
+        confirmButtonColor:'#9BDE87',
+        showCloseButton:true,
+        timer: 7000
+
+      });
+      if (usuario == data.alumno__nombre_alumno && data.estado == 'aceptada') {
+        inicio({
+          type: 'success',
+          title: 'El profesor '+data.profesor__nombre_profesor+' ha aceptado una asesoría, '+data.alumno__nombre_alumno
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("urlProf");
+            var url = url + "asesoria/"+data.profesor__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin;
+            window.location.replace(url);
+          }
+        })
+      }else if (usuario == data.alumno__nombre_alumno && data.estado == 'Cancelada') {
+        inicio({
+          confirmButtonColor: '#EA0108',
+          type: 'error',
+          title: 'El profesor '+data.profesor__nombre_profesor+' ha cancelado una asesoría, '+data.alumno__nombre_alumno
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("urlProf");
+            var url = url + "asesoria/"+data.profesor__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.estado;
+            window.location.replace(url);
+          }
+        })
+      }
+    });
+  </script>
+</head>
+<body>
+<div class="container-fluid mt-3">
+    {% bootstrap_messages %}
+    {% block content %}
+        Sin contenido.
+    {% endblock %}
+</div>
+<script src="{% static 'bootstrap/js/bootstrap.min.js' %}"></script>
+<script src = "{% static 'bootstrap/js/elemento.js' %}"> </script>
+</body>
+</html>

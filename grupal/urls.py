@@ -10,6 +10,8 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('inicio/', include('accounts.urls')),
     path('inicio/', include('django.contrib.auth.urls')),
+    #Pruebas
+    path('a/', views.noti , name='registrar'),
     #Profesor
     path('principal/p/', TemplateView.as_view(template_name='principalP.html')),
     path('principal/p/ver/<str:prof>', views.verProf , name='ver'),
