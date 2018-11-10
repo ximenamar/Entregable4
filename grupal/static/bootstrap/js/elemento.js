@@ -239,9 +239,9 @@ function retornar(alumn){
 }
 
 function reservaCancel(asesoria){
-aseCancel = asesoria.asesoria
+aseCancel = asesoria
 var url = sessionStorage.getItem("busq1");
-
+var alum = sessionStorage.getItem("usu");
 const swalWithBootstrapButtons = swal.mixin({
   confirmButtonClass: 'btn btn-success',
   cancelButtonClass: 'btn btn-danger',
@@ -260,7 +260,7 @@ swalWithBootstrapButtons({
   reverseButtons: true
 }).then((result) => {
   if (result.value) {
-    $.get('/principal/asesoria/cancelar/'+aseCancel,function(){
+    $.get('/principal/asesoria/cancelar/'+aseCancel ,function(){
       swalWithBootstrapButtons({
         title: '¡Se ha borrado la cita!',
         type: 'success',
@@ -269,7 +269,54 @@ swalWithBootstrapButtons({
       }).then((result) => {
         if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
           var url = sessionStorage.getItem("busq1");
-          var url = url + "ver"+"/"+asesoria.alumno__nombre_alumno;
+          var url = url + "ver"+"/"+alum;
+          window.location.replace(url);
+        }
+      })
+    })
+  } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+    swalWithBootstrapButtons(
+      '¡No se ha borrado la cita!',
+      '',
+      'info'
+    )
+  }
+})
+
+}
+
+function reservaCancelPen(asesoria){
+aseCancel = asesoria.asesoria
+var url = sessionStorage.getItem("busq1");
+var alum = sessionStorage.getItem("usu");
+const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#3085d6',
+  allowOutsideClick: true,
+})
+
+swalWithBootstrapButtons({
+  title: '¿Está seguro?',
+  text: "Se va a cancelar la cita",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Sí, ¡Cancélala!',
+  cancelButtonText: 'No',
+  reverseButtons: true
+}).then((result) => {
+  if (result.value) {
+    $.get('/principal/asesoria/cancelar/'+aseCancel ,function(){
+      swalWithBootstrapButtons({
+        title: '¡Se ha borrado la cita!',
+        type: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'ok'
+      }).then((result) => {
+        if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+          var url = sessionStorage.getItem("busq1");
+          var url = url + "ver"+"/"+alum;
           window.location.replace(url);
         }
       })
