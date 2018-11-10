@@ -35,9 +35,10 @@ var ini = sessionStorage.getItem("ini");
       title: 'Sesión iniciada, '+tipo+' '+user
     })
     sessionStorage.setItem("ini",1);
+    sessionStorage.setItem("usu",user);
   }
 }
-function aseR(user,tipo){
+function aseR(user,tipo, asesoria){
 var ini = sessionStorage.getItem("ini");
 if (ini==2) {
   const inicio = swal.mixin({
@@ -50,6 +51,12 @@ if (ini==2) {
     type: 'success',
 
     title: 'Asesoría reservada, '+tipo+' '+user
+  }).then((result) => {
+    if (result.dismiss === swal.DismissReason.timer) {
+      var url = sessionStorage.getItem("urlProf");
+      var url = url + "ver/"+user;
+      window.location.replace(url);
+    }
   })
   sessionStorage.setItem("ini",1);
 }
@@ -97,11 +104,35 @@ window.location.replace(ver);
 
 function getElements(){
 var nombre_profesor = document.getElementById('userProfesor').value
+console.log(nombre_profesor);
 var carrera = document.getElementById('sel').value
 var elementos = "busqueda1/"+ carrera + '/' + nombre_profesor;
 var url = sessionStorage.getItem("busq1");
 var url = url + elementos ;
-window.location.replace(url)
+if (nombre_profesor != "") {
+  window.location.replace(url)
+}else {
+  const swalWithBootstrapButtons = swal.mixin({
+    confirmButtonClass: 'btn btn-success',
+    cancelButtonClass: 'btn btn-danger',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    allowOutsideClick: true,
+  })
+  swalWithBootstrapButtons({
+    title: '¡Espere!',
+    text: 'Escriba el profesor',
+    type: 'warning',
+    confirmButtonColor: '#3085d6',
+    confirmButtonText: 'ok'
+  }).then((result) => {
+    if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+      location.reload();
+    }
+  })
+
+}
+
 }
 
 function buscar1(){
@@ -139,7 +170,7 @@ if (nombre_profesor == ""){
   swal("¡Espere!", 'Porfavor escribe el profesor', "warning");
 
 }else{
-  swal("¡Espere!", 'Porfavor seleccione los dos filtros', "warning");
+  swal("¡Espere, seleccione una carrera!", 'Para ver los cursos...', "warning");
 }
 }
 
@@ -208,9 +239,9 @@ function retornar(alumn){
 }
 
 function reservaCancel(asesoria){
-aseCancel = asesoria.asesoria
+aseCancel = asesoria
 var url = sessionStorage.getItem("busq1");
-
+var alum = sessionStorage.getItem("usu");
 const swalWithBootstrapButtons = swal.mixin({
   confirmButtonClass: 'btn btn-success',
   cancelButtonClass: 'btn btn-danger',
@@ -229,7 +260,7 @@ swalWithBootstrapButtons({
   reverseButtons: true
 }).then((result) => {
   if (result.value) {
-    $.get('/principal/asesoria/cancelar/'+aseCancel,function(){
+    $.get('/principal/asesoria/cancelar/'+aseCancel ,function(){
       swalWithBootstrapButtons({
         title: '¡Se ha borrado la cita!',
         type: 'success',
@@ -238,7 +269,54 @@ swalWithBootstrapButtons({
       }).then((result) => {
         if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
           var url = sessionStorage.getItem("busq1");
-          var url = url + "ver"+"/"+asesoria.alumno__nombre_alumno;
+          var url = url + "ver"+"/"+alum;
+          window.location.replace(url);
+        }
+      })
+    })
+  } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+    swalWithBootstrapButtons(
+      '¡No se ha borrado la cita!',
+      '',
+      'info'
+    )
+  }
+})
+
+}
+
+function reservaCancelPen(asesoria){
+aseCancel = asesoria.asesoria
+var url = sessionStorage.getItem("busq1");
+var alum = sessionStorage.getItem("usu");
+const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#3085d6',
+  allowOutsideClick: true,
+})
+
+swalWithBootstrapButtons({
+  title: '¿Está seguro?',
+  text: "Se va a cancelar la cita",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Sí, ¡Cancélala!',
+  cancelButtonText: 'No',
+  reverseButtons: true
+}).then((result) => {
+  if (result.value) {
+    $.get('/principal/asesoria/cancelar/'+aseCancel ,function(){
+      swalWithBootstrapButtons({
+        title: '¡Se ha borrado la cita!',
+        type: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'ok'
+      }).then((result) => {
+        if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+          var url = sessionStorage.getItem("busq1");
+          var url = url + "ver"+"/"+alum;
           window.location.replace(url);
         }
       })
@@ -302,9 +380,11 @@ swalWithBootstrapButtons({
 
 function mostrarAsesoria(asesoria){
 var ver = sessionStorage.getItem("busq1");
-if (asesoria.estado == "pendiente a aceptar" || asesoria.estado == "aceptada" ){
-  var elementos = "asesoria/"+asesoria.profesor__nombre_profesor+"/"+asesoria.alumno__nombre_alumno+"/"+asesoria.dia+"/"+asesoria.lugar+"/"+asesoria.hora_inicio+"/"+asesoria.hora_fin;
+if (asesoria.estado == "pendiente a aceptar"){
+  var elementos = "asesoria/ver/sinAceptar/"+asesoria.profesor__nombre_profesor+"/"+asesoria.alumno__nombre_alumno+"/"+asesoria.dia+"/"+asesoria.lugar+"/"+asesoria.hora_inicio+"/"+asesoria.hora_fin+"/"+asesoria.estado;
 
+}else if (asesoria.estado == "aceptada" ) {
+  var elementos = "asesoria/ver/aceptado/"+asesoria.profesor__nombre_profesor+"/"+asesoria.alumno__nombre_alumno+"/"+asesoria.dia+"/"+asesoria.lugar+"/"+asesoria.hora_inicio+"/"+asesoria.hora_fin+"/"+asesoria.estado;
 }else {
   var elementos = "asesoria/"+asesoria.profesor__nombre_profesor+"/"+asesoria.alumno__nombre_alumno+"/"+asesoria.dia+"/"+asesoria.lugar+"/"+asesoria.hora_inicio+"/"+asesoria.hora_fin+"/"+asesoria.estado;
 }
@@ -338,9 +418,10 @@ window.location.replace(ver);
 }
 
 function reservaAceptar(asesoria){
-aseAceptar = asesoria.asesoria
+aseAceptar = asesoria.asesoria;
+alum = asesoria.alumno__nombre_alumno;
 var url = sessionStorage.getItem("busq1");
-
+console.log(alum);
 const swalWithBootstrapButtons = swal.mixin({
   confirmButtonClass: 'btn btn-success',
   cancelButtonClass: 'btn btn-danger',
@@ -387,38 +468,47 @@ swalWithBootstrapButtons({
 function reservaNoAceptar(asesoria){
 aseNoAceptar = asesoria.asesoria
 var url = sessionStorage.getItem("busq1");
-swal({
-  title: "¿Está seguro sobre no aceptar?",
-  text: "Se va a eliminar lo aceptado con el alumno",
-  type: "warning",
-  buttons: true,
-  dangerMode: true,
+
+const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#3085d6',
+  allowOutsideClick: true,
 })
-.then((willDelete) => {
-  if (willDelete) {
+
+swalWithBootstrapButtons({
+  title: '¿Está seguro sobre no aceptar?',
+  text: "Se va a eliminar lo aceptado con el alumno",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Sí, ¡No lo aceptes!',
+  cancelButtonText: 'No',
+  reverseButtons: true
+}).then((result) => {
+  if (result.value) {
     $.get('/principal/p/asesoria/noaceptar/'+aseNoAceptar,function(){
-      swal({
-        title: "¡Se ha eliminado lo aceptado !",
-        type: "success",
-        dangerMode: true,
-      })
-      .then((willDelete) => {
-        if (willDelete) {
-          var url = sessionStorage.getItem("busq1");
+      swalWithBootstrapButtons({
+        title: '¡Se ha eliminado lo aceptado!',
+        type: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'ok'
+      }).then((result) => {
+        if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+	  var url = sessionStorage.getItem("busq1");
           var url = url + "ver"+"/"+asesoria.profesor__nombre_profesor;
           window.location.replace(url);
         }
-      });
+      })
     })
-
-  } else {
-    swal({
-      title: "¡Se sigue aceptando la cita!",
-      type: "info",
-    })
+  } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+    swalWithBootstrapButtons(
+      '¡Se sigue aceptando la cita!',
+      '',
+      'info'
+    )
   }
-});
-
+})
 }
 
 function regresar(prof){
