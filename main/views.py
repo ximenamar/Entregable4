@@ -5,7 +5,7 @@ from django.views import generic
 from django.template import loader
 from collections import deque
 from .models import *
-import pusher
+#import pusher
 #Notificaciones
 
 def noti(request):
