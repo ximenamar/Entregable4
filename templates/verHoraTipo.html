@@ -9,6 +9,7 @@
   {% endfor %}
   {% for selImp in filtrado %}
 <input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{selImp}}">
+<br>
   {% endfor %}
 <div class="container" name="cita">
 
@@ -20,6 +21,7 @@
     <br>
     <span>
     <li class="list-group-item" id="horaio">
+
     <p>
       Profesor: {{cita.profesor__nombre_profesor}}
     </p>
