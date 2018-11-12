@@ -299,10 +299,15 @@ def citaCancelar(request, asesoria):
 
 #Inicio Funciones Profesor
 def verProf(request, prof):
+     imprimir = ""
      asesoria = Asesoria.objects.values('profesor__nombre_profesor','alumno__nombre_alumno','dia','lugar','hora_inicio','hora_fin','razon','estado').filter(profesor__nombre_profesor = prof ).order_by('estado','dia').exclude(estado = "Cancelada")
-     print(asesoria)
+     cant =  Asesoria.objects.values('profesor__nombre_profesor').filter(profesor__nombre_profesor = prof).exclude(estado = "Cancelada").count()
+     print(cant)
+     if cant == 0:
+         imprimir = ["Profesor "+prof+", no tienes ninguna asesoría para gestionar"]
      contexto = {
-        "lista_asesorias": asesoria
+        "lista_asesorias": asesoria,
+        "noAse": imprimir
      }
      return render(request, "verAsesoriaProf.html", contexto)
 

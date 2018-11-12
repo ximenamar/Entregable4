@@ -5,7 +5,9 @@
   <h1><center class="mt-5 mb-5">Citas a Gestionar</center></h1>
 
 <div class="container" name="cita">
-
+    {% for imprimir in noAse %}
+    <p>{{imprimir}}</p>
+    {% endfor %}
 
     {% for asesoria in lista_asesorias %}
     {% if asesoria != "" %}
