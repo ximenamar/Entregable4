@@ -2,7 +2,7 @@
 function getBase(){
   let base = window.location.href;
   let main = base.split("inicio/login/")
-  sessionStorage.setItem("urlProf",main[0]+ "principal");
+  sessionStorage.setItem("urlProf",main[0]+ "principal/");
   sessionStorage.setItem("ini",0);
 }
 
@@ -10,10 +10,10 @@ function getTipo(tipo){
   var url = sessionStorage.getItem("urlProf");
 
   if (tipo == "profesor") {
-    var url = url+"/p/"
+    var url = url+"p/"
     window.location.replace(url);
   }else if (tipo == "administrador") {
-    var url = url+"/a/"
+    var url = url+"a/"
     window.location.replace(url);
   }else {
     window.location.replace(url);

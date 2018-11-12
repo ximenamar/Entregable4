@@ -40,7 +40,7 @@
         }).then((result) => {
           if (result.value) {
             var url = sessionStorage.getItem("urlProf");
-            var url = url + "asesoria/"+data.profesor__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin;
+            var url = url + "asesoria/"+data.profesor__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.estado;
             window.location.replace(url);
           }
         })
