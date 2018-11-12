@@ -559,7 +559,7 @@ function crearAdmin(admin,tipo){
 
 function crearAse(admin){
   var url = sessionStorage.getItem("urlProf");
-  var url = url + "/a"+"/crearAse/"+admin;
+  var url = url + "a"+"/crearAse/"+admin;
   window.location.replace(url);
 }
 
@@ -579,11 +579,11 @@ function queVer(){
           resolve('Seleccione, porfavor')
         } else if (value === 'profe') {
           var url = sessionStorage.getItem("urlProf");
-          var url = url + "/a"+"/gestAse/"+"prof";
+          var url = url + "a"+"/gestAse/"+"prof";
           window.location.replace(url);
         }else {
           var url = sessionStorage.getItem("urlProf");
-          var url = url + "/a"+"/gestAse/"+"dia";
+          var url = url + "a"+"/gestAse/"+"dia";
           window.location.replace(url);
         }
       })
@@ -600,11 +600,11 @@ function mostrarHora(cita){
   console.log(dia);
   if (dia == undefined) {
     var url = sessionStorage.getItem("urlProf");
-    var url = url + "/a"+"/gestAse/"+"ver/"+prof;
+    var url = url + "a"+"/gestAse/"+"ver/"+prof;
     window.location.replace(url);
   }else {
     var url = sessionStorage.getItem("urlProf");
-    var url = url + "/a"+"/gestAse/"+"ver/"+dia;
+    var url = url + "a"+"/gestAse/"+"ver/"+dia;
     window.location.replace(url);
   }
 
@@ -612,7 +612,7 @@ function mostrarHora(cita){
 
 function inicioA(){
 var url = sessionStorage.getItem("urlProf");
-var url = url+"/a/"
+var url = url+"a/"
 window.location.replace(url)
 }
 
@@ -628,8 +628,32 @@ var fin = document.getElementById('fin').value;
 var dia = document.getElementById('dia').value;
 var lugar = document.getElementById('lugar').value;
 
-if (profesor == "Profesor" || inicio == "" || fin == "" || dia == "" || lugar == "") {
+var re = new RegExp("((1[0-2]|0?[0-9])([ap][m][^m]))");
+var iniNum = inicio.split(/(1[0-2]|0?[0-9])/)[1];
+var iniMeri = inicio.split(/(1[0-2]|0?[0-9])/)[2];
+var finNum = fin.split(/(1[0-2]|0?[0-9])/)[1];
+var finMeri = fin.split(/(1[0-2]|0?[0-9])/)[2];
+
+if ((iniMeri == 'am' && finMeri == 'pm')||(iniMeri == 'pm' && finMeri == 'am') ) {
+  if (finMeri == 'pm') {
+    var rest = finNum - iniNum + 1
+  }
+}else if (iniNum == '12' && iniMeri == 'pm') {
+  var rest = iniNum - finNum - 10
+}else {
+  var rest = finNum - iniNum
+}
+
+if (profesor == "Profesor" || inicio == "" || fin == "" || dia == "Elige un día" || lugar == "") {
   swal("¡Espere, administrador!", 'Porfavor complete todos los campos', "warning");
+}else if (re.test(inicio) != false  || re.test(fin) != false || rest < 0 || (iniMeri == "pm" && finMeri == "am")||(iniNum == '1' && iniMeri == 'pm')&& (finNum == '12' && finMeri == 'pm')||iniMeri.length > 2 || finMeri.length > 2) {
+  swal("¡Espere, administrador!", 'Porfavor escriba un intervalo de hora valida', "warning");
+}else if (inicio == fin) {
+  swal("¡Espere, administrador!", 'Porfavor elija horas distintas', "warning");
+}else if (rest != 1) {
+  swal("¡Imposible, administrador!", 'Un profesor solo debe de tener asesorías por una hora', "warning");
+}else if ((iniNum == '1' && iniMeri == 'pm')&& (finNum == '2' && finMeri == 'pm')) {
+  swal("¡Imposible, administrador!", 'Es hora del almuerzo', "warning");
 }else {
   var elementos = "/"+profesor+"/"+inicio+"/"+fin+"/"+dia+"/"+lugar+"/"+"cita"+profesor+inicio+lugar+dia
   swal({
@@ -651,7 +675,7 @@ if (profesor == "Profesor" || inicio == "" || fin == "" || dia == "" || lugar ==
           .then((willDelete) => {
             if (willDelete) {
               var url = sessionStorage.getItem("urlProf");
-              var url = url + "/a/";
+              var url = url + "a/";
               window.location.replace(url);
             }
           });
@@ -725,7 +749,7 @@ function mostrarMod(cita){
   let main = window.location.href;
   sessionStorage.setItem("reg2",main);
   var url = sessionStorage.getItem("urlProf");
-  var url = url + "/a/modAse/"+cita.codigo_simple;
+  var url = url + "a/modAse/"+cita.codigo_simple;
   window.location.replace(url);
 }
 
