@@ -628,7 +628,7 @@ var fin = document.getElementById('fin').value;
 var dia = document.getElementById('dia').value;
 var lugar = document.getElementById('lugar').value;
 
-var re = new RegExp("((1[0-2]|0?[0-9])([ap][m][^m]))");
+var re = new RegExp("((1[0-2]|0?[0-9])([ap][m]))");
 var iniNum = inicio.split(/(1[0-2]|0?[0-9])/)[1];
 var iniMeri = inicio.split(/(1[0-2]|0?[0-9])/)[2];
 var finNum = fin.split(/(1[0-2]|0?[0-9])/)[1];
@@ -646,7 +646,7 @@ if ((iniMeri == 'am' && finMeri == 'pm')||(iniMeri == 'pm' && finMeri == 'am') )
 
 if (profesor == "Profesor" || inicio == "" || fin == "" || dia == "Elige un día" || lugar == "") {
   swal("¡Espere, administrador!", 'Porfavor complete todos los campos', "warning");
-}else if (re.test(inicio) != false  || re.test(fin) != false || rest < 0 || (iniMeri == "pm" && finMeri == "am")||(iniNum == '1' && iniMeri == 'pm')&& (finNum == '12' && finMeri == 'pm')||iniMeri.length > 2 || finMeri.length > 2) {
+}else if (re.test(inicio) != true  || re.test(fin) != true || rest < 0 || (iniMeri == "pm" && finMeri == "am")||(iniNum == '1' && iniMeri == 'pm')&& (finNum == '12' && finMeri == 'pm')||iniMeri.length > 2 || finMeri.length > 2) {
   swal("¡Espere, administrador!", 'Porfavor escriba un intervalo de hora valida', "warning");
 }else if (inicio == fin) {
   swal("¡Espere, administrador!", 'Porfavor elija horas distintas', "warning");
