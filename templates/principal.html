@@ -11,7 +11,8 @@
   </div>
   <div class="">
     {% load static %}
-    <img src="{% static 'images/icon.jpg' %}" alt="">
+    <img id='perfil' src="{% static 'images/icon.jpg' %}" alt="">
+    <button type="button" onclick="cambFoto('{{user.first_name}}')" class="btn btn-outline-success">Cambie foto de perfil</button>
   </div>
     <p class="lead mb-5">¡Bienvenido, <br id="alumno"> {{ user.first_name}}!</br></p>
   </center>

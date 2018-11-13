@@ -19,7 +19,10 @@ urlpatterns = [
     path('principal/p/asesoria/<str:prof>/<str:alum>/<str:dia>/<str:lugar>/<str:inicio>/<str:fin>/<str:estado>', views.citaReservadaProfCancel , name='citaProfVer'),
     path('principal/p/asesoria/aceptar/<str:asesoria>', views.citaAceptar , name='reserva'),
     path('principal/p/asesoria/noaceptar/<str:asesoria>', views.citaNoAceptar , name='reserva'),
+    path('principal/p/asesoria/atendido/<str:asesoria>/<str:prof>/<str:alum>/<str:dia>/<str:lugar>/<str:inicio>/<str:fin>/<str:razon>', views.citaAtendida , name='reserva'),
     path('principal/p/guardarProf/<str:prof>', views.crearProf , name='reserva'),
+    path('principal/p/verHistorial/<str:tipo>/<str:prof>', views.verHisAse , name='modificar'),
+    path('principal/p/historial/ver/<str:sel>', views.verHisFil , name='modificar'),
     #administrador
     path('principal/a/', TemplateView.as_view(template_name='principala.html')),
     path('principal/a/guardarAdmin/<str:admin>', views.crearAdmin , name='administrador'),

@@ -1,5 +1,5 @@
 from django.db import models
-
+from datetime import datetime
 class Administrador(models.Model):
     nombre_administrador = models.CharField(max_length=200, default='Profesor')
     def __str__(self):
@@ -66,3 +66,17 @@ class Asesoria(models.Model):
     estado = models. CharField(max_length=200, null=True)
     def __str__(self):
         return self.asesoria
+
+class Historial(models.Model):
+    historial = models.CharField(max_length=200, default='Asesoria')
+    profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)
+    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
+    dia = models.CharField(max_length=200, null=True)
+    lugar= models.CharField(max_length=200, null=True)
+    hora_inicio = models.CharField(max_length=200)
+    hora_fin = models.CharField(max_length=200)
+    razon = models.CharField(max_length=200, null=True)
+    fecha = models.DateTimeField(default=datetime.now, editable=False)
+    read_only = 'fecha'
+    def __str__(self):
+        return self.historial

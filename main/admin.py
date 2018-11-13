@@ -19,3 +19,5 @@ admin.site.register(Carrera)
 admin.site.register(Curso)
 
 admin.site.register(Asesoria)
+
+admin.site.register(Historial)

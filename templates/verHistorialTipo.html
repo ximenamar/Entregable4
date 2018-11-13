@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+
+  <h1><center class="mt-5 mb-5">Ver historial</center></h1>
+  {% for selVer in seleccion %}
+  <p><h3>{{selVer}}</h3></p>
+  {% endfor %}
+  {% for selImp in filtrado %}
+<input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{selImp}}">
+<br>
+  {% endfor %}
+<div class="container" name="cita">
+
+<ul class="list-group" id="myList">
+
+
+
+    {% for cita in lista_citas %}
+    <br>
+    <span>
+    <li class="list-group-item" id="horaio">
+    <p>
+      Fecha: {{cita.fecha}}
+    </p>
+    <p>
+      Alumno: {{cita.alumno__nombre_alumno}}
+    </p>
+    <p>
+      Dia: {{cita.dia}}
+    </p>
+
+    <p>
+      Lugar: {{cita.lugar}}
+    </p>
+
+    <p>
+      Hora: {{cita.hora_inicio}} - {{cita.hora_fin}}
+    </p>
+    <p>
+      Razón: {{cita.razon}}
+    </p>
+    </li>
+    {% endfor %}
+    </span>
+    </br>
+
+  </ul>
+  <div>
+    <button onclick="regresarP()" class="btn btn-secondary btn-lg"> Regresar </button>
+    <button onclick="inicioP()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+  </div>
+
+</div>
+<script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myList li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

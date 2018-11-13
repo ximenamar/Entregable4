@@ -64,6 +64,48 @@ if (ini==2) {
 }
 
 //Alumno
+function cambFoto(){
+  const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  buttonsStyling: false,
+})
+
+swalWithBootstrapButtons({
+  title: 'Seleccione una foto para el perfil',
+  input: 'file',
+  showCancelButton: true,
+  confirmButtonText: 'Sí, ¡Selecciónala!',
+  cancelButtonText: 'No, ¡Cancela!',
+  reverseButtons: true,
+  inputAttributes: {
+    'accept': 'image/*',
+    'aria-label': 'Upload your profile picture'
+  }
+}).then((result) => {
+  if (result.value) {
+    const reader = new FileReader
+    reader.onload = (e) => {
+      swal({
+        title: 'Your uploaded picture',
+        imageUrl: e.target.result,
+        imageAlt: 'The uploaded picture'
+      })
+    }
+    reader.readAsDataURL(result.value)
+  } else if (
+    // Read more about handling dismissals
+    result.dismiss === swal.DismissReason.cancel
+  ) {
+    swalWithBootstrapButtons(
+      'No se ha cambiado la foto de perfil',
+      '',
+      'info'
+    )
+  }
+})
+
+}
 
 function inicio(){
 var url = sessionStorage.getItem("busq1");
@@ -406,6 +448,34 @@ var ver = url + elementos ;
 window.location.replace(ver);
 }
 
+function get_hist(prof){
+  const {value: fruit} = swal({
+    title: '¿Cómo desea ver el historial?',
+    input: 'select',
+    inputOptions: {
+      'alum': 'Alumno',
+      'dia': 'Día',
+    },
+    inputPlaceholder: 'Selecciona alumno o día',
+    showCancelButton: true,
+    inputValidator: (value) => {
+      return new Promise((resolve) => {
+        if (value === '') {
+          resolve('Seleccione, porfavor')
+        } else if (value === 'alum') {
+          var url = sessionStorage.getItem("urlProf");
+          var url = url + "p"+"/verHistorial/"+"alum"+'/'+prof;
+          window.location.replace(url);
+        }else {
+          var url = sessionStorage.getItem("urlProf");
+          var url = url + "p"+"/verHistorial/"+"dia"+'/'+prof;
+          window.location.replace(url);
+        }
+      })
+    }
+  })
+}
+
 function mostrarAsesoriaProf(asesoria){
 var ver = sessionStorage.getItem("busq1");
 if (asesoria.estado == "pendiente a aceptar") {
@@ -534,6 +604,96 @@ function crearProf(prof,tipo){
       })
       sessionStorage.setItem("ini",1);
     }
+}
+
+function reservaMarcar(asesoria){
+aseAcept = asesoria.asesoria;
+var d = new Date();
+var dias = ["Viernes","Lunes","Martes","Miércoles","Jueves"];
+var dia = dias[d.getDay()];
+var hora = d.getHours();
+var hAse = asesoria.hora_fin.split(/(1[0-2]|0?[0-9])/)[1];
+var meriAse = asesoria.hora_fin.split(/(1[0-2]|0?[0-9])/)[2];
+
+if (meriAse == "pm") {
+  var hAse = parseInt(hAse) + 12
+}
+
+if (hora < hAse ||asesoria.dia != dia) {
+  swal("¡Espere, profesor!", 'No se puede marcar como atendida una asesoría que aún no termina', "warning");
+}else{
+  const swalWithBootstrapButtons = swal.mixin({
+    confirmButtonClass: 'btn btn-success',
+    cancelButtonClass: 'btn btn-danger',
+    confirmButtonColor: '#d33',
+    cancelButtonColor: '#3085d6',
+    allowOutsideClick: true,
+  })
+  swalWithBootstrapButtons({
+    title: '¿Está seguro?',
+    text: "Se va a marcar como atendida esta asesoría",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, ¡Márcalo!',
+    cancelButtonText: 'No',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.value) {
+      $.get('/principal/p/asesoria/atendido/'+aseAcept+'/'+asesoria.profesor__nombre_profesor+'/'+asesoria.alumno__nombre_alumno+'/'+asesoria.dia+'/'+asesoria.lugar+'/'+asesoria.hora_inicio+'/'+asesoria.hora_fin+'/'+asesoria.razon,function(){
+        swalWithBootstrapButtons({
+          title: '¡Se ha marcado como atendido la asesoría!',
+          type: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'ok'
+        }).then((result) => {
+          if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+  	  var url = sessionStorage.getItem("busq1");
+            var url = url + "ver"+"/"+asesoria.profesor__nombre_profesor;
+            window.location.replace(url);
+          }
+        })
+      })
+    } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+      swalWithBootstrapButtons(
+        '¡No se ha marcado como atendida la asesoría!',
+        '',
+        'info'
+      )
+    }
+  })
+}
+
+
+}
+
+function mostrarHistorial(cita){
+  alum =cita.alumno__nombre_alumno
+  dia =cita.dia
+  let main = window.location.href;
+  sessionStorage.setItem("reg",main);
+  console.log(alum);
+  console.log(dia);
+  if (dia == undefined) {
+    var url = sessionStorage.getItem("urlProf");
+    var url = url + "p"+"/historial/"+"ver/"+alum;
+    window.location.replace(url);
+  }else {
+    var url = sessionStorage.getItem("urlProf");
+    var url = url + "p"+"/historial/"+"ver/"+dia;
+    window.location.replace(url);
+  }
+
+}
+
+function inicioP(){
+var url = sessionStorage.getItem("urlProf");
+var url = url+"p/"
+window.location.replace(url)
+}
+
+function  regresarP(){
+var url = sessionStorage.getItem("reg");
+window.location.replace(url)
 }
 
 //administrador
@@ -819,6 +979,4 @@ function modificarHo(cita){
       });
     }
   }
-
-
 }

@@ -434,6 +434,62 @@ def crearProf(request, prof):
 
     return HttpResponse("")
 
+def citaAtendida(request, asesoria, prof, alum, dia, lugar, inicio, fin, razon):
+    alumnoAse = Alumno.objects.only('nombre_alumno').filter(nombre_alumno = alum).get()
+    profesorAse = Profesor.objects.only('nombre_profesor').filter(nombre_profesor = prof).get()
+    hist = Historial(historial=asesoria,profesor=profesorAse,alumno=alumnoAse,hora_inicio=inicio,hora_fin=fin,dia=dia,lugar=lugar,razon=razon)
+    hist.save()
+    Asesoria.objects.filter(asesoria=asesoria).delete()
+    return HttpResponse("")
+
+def verHisAse(request, tipo,prof):
+    imprimir = "día"
+    selVer = []
+    a = [""]
+    if tipo == "alum":
+        cita = Historial.objects.values('alumno__nombre_alumno').filter(profesor__nombre_profesor=prof).order_by('alumno__nombre_alumno').distinct()
+        imprimir = "alumno"
+    else:
+        cita = Historial.objects.values('dia').filter(profesor__nombre_profesor=prof).order_by('dia').distinct()
+
+    for i in a:
+        selVer.append(imprimir)
+
+    contexto = {
+        "lista_citas": cita,
+        "filtrado": selVer
+     }
+    return render(request, "verHistorialAsesoria.html", contexto)
+
+def verHisFil(request, sel):
+    citaAlum = Historial.objects.values('alumno__nombre_alumno','razon','hora_inicio','hora_fin','dia','lugar','fecha').filter(alumno__nombre_alumno=sel).order_by('fecha')
+    citaDia = Historial.objects.values('alumno__nombre_alumno','razon','hora_inicio','hora_fin','dia','lugar','fecha').filter(dia=sel).order_by('fecha')
+    noneAlum = citaAlum.count()
+    noneDia = citaDia.count()
+
+    selVer = []
+    a = [""]
+    selImp= []
+    imprimir = "alumno"
+    for i in a:
+        selVer.append(sel)
+
+    if noneAlum != 0 and noneDia==0:
+        cita = citaAlum
+        imprimir = "día"
+    else:
+        cita = citaDia
+
+    for i in a:
+        selImp.append(imprimir)
+
+    contexto = {
+        "lista_citas": cita,
+        "seleccion": selVer,
+        "filtrado": selImp
+    }
+    return render(request, "verHistorialTipo.html", contexto)
+
 #Funciones del administrador
 
 def crearAdmin(request, admin):
