@@ -244,7 +244,7 @@ def citaReCrear(request, asesoria):
     )
 
     pusher_client.trigger('my-channel', 'my-event',ase)
-    #Manda Notificaciones al profesore
+    #Manda Notificaciones al profesor
     pusher_client = pusher.Pusher(
     app_id='642947',
     key='25d751d0250a1bbbf28b',
@@ -446,18 +446,23 @@ def verHisAse(request, tipo,prof):
     imprimir = "día"
     selVer = []
     a = [""]
+    cita = ""
+    noEx = ""
     if tipo == "alum":
         cita = Historial.objects.values('alumno__nombre_alumno').filter(profesor__nombre_profesor=prof).order_by('alumno__nombre_alumno').distinct()
         imprimir = "alumno"
     else:
         cita = Historial.objects.values('dia').filter(profesor__nombre_profesor=prof).order_by('dia').distinct()
-
+    if cita.count()==0:
+        cita = ""
+        noEx = "No exiten registros"
     for i in a:
         selVer.append(imprimir)
 
     contexto = {
         "lista_citas": cita,
         "filtrado": selVer
+        "no": noEx
      }
     return render(request, "verHistorialAsesoria.html", contexto)
 

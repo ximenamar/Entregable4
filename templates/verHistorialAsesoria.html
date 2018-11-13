@@ -8,10 +8,14 @@
 <input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{ selVer}} ">
 <br>
 {% endfor %}
+{% for noEx in no %}
+{{noEx}}
+{% endfor %}
 <div class="container" name="cita">
 
 <ul class="list-group" id="myList">
     {% for cita in lista_citas %}
+
     <br>
     <span>
     <li class="list-group-item" id="horaio">
