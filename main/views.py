@@ -439,7 +439,38 @@ def citaAtendida(request, asesoria, prof, alum, dia, lugar, inicio, fin, razon):
     profesorAse = Profesor.objects.only('nombre_profesor').filter(nombre_profesor = prof).get()
     hist = Historial(historial=asesoria,profesor=profesorAse,alumno=alumnoAse,hora_inicio=inicio,hora_fin=fin,dia=dia,lugar=lugar,razon=razon)
     hist.save()
-    Asesoria.objects.filter(asesoria=asesoria).delete()
+    a = asesoria
+    Asesoria.objects.filter(asesoria=a).update(estado = "marcado")
+    ase = Asesoria.objects.values('alumno__nombre_alumno','profesor__nombre_profesor','estado','dia','lugar','hora_inicio','hora_fin').filter(asesoria = a).get()
+    #MNotificaciones al alumno
+    pusher_client = pusher.Pusher(
+      app_id='641815',
+      key='088d8d55c84743f48c36',
+      secret='86e8e73a4178e10bc7a9',
+      cluster='us2',
+      ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event', ase)
+    Asesoria.objects.filter(asesoria=a).delete()
+    #actualiza la vista alumno
+    pusher_client = pusher.Pusher(
+    app_id='642894',
+    key='83777adac1c4e636cd80',
+    secret='6f59983b4b6fb9481554',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
+    #actualiza la vista de detalles del alumno
+    pusher_client = pusher.Pusher(
+    app_id='642983',
+    key='9022786e650c83d9e11f',
+    secret='9deebca47bceb88120d6',
+    cluster='us2',
+    ssl=True
+    )
+    pusher_client.trigger('my-channel', 'my-event',ase)
+
     return HttpResponse("")
 
 def verHisAse(request, tipo,prof):

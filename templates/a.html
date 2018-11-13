@@ -40,7 +40,7 @@
         }).then((result) => {
           if (result.value) {
             var url = sessionStorage.getItem("urlProf");
-            var url = url + "asesoria/"+data.profesor__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.estado;
+            var url = url + "asesoria/ver/aceptado/"+data.profesor__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.estado;
             window.location.replace(url);
           }
         })
@@ -53,6 +53,18 @@
           if (result.value) {
             var url = sessionStorage.getItem("urlProf");
             var url = url + "asesoria/"+data.profesor__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.estado;
+            window.location.replace(url);
+          }
+        })
+      }else if (usuario == data.alumno__nombre_alumno && data.estado == 'marcado') {
+        inicio({
+          confirmButtonColor: '#EA0108',
+          type: 'info',
+          title: 'El profesor '+data.profesor__nombre_profesor+' ha marcado una asesoría como atendida, '+data.alumno__nombre_alumno
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("urlProf");
+            var url = url + "ver/"+data.alumno__nombre_alumno;
             window.location.replace(url);
           }
         })
