@@ -5,8 +5,12 @@
 
   <h1><center class="mt-5 mb-5">Ver historial</center></h1>
   {% for selVer in seleccion %}
-  <p><h3>{{selVer}}</h3></p>
+  <p><h3>{{selVer}}
   {% endfor %}
+
+    <button onclick="regresarP()" class="btn btn-secondary btn-lg"> Regresar </button>
+    <button onclick="inicioP()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+  </h3></p>
   {% for selImp in filtrado %}
 <input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{selImp}}">
 <br>
@@ -44,14 +48,13 @@
     </li>
     {% endfor %}
     </span>
-    </br>
+
 
   </ul>
+  <br>
   <div>
-    <button onclick="regresarP()" class="btn btn-secondary btn-lg"> Regresar </button>
-    <button onclick="inicioP()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+  <button onclick="subirP()" class="btn btn-secondary btn-lg"> Subir</button>
   </div>
-
 </div>
 <script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp
 $(document).ready(function(){

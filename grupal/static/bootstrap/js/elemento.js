@@ -696,6 +696,11 @@ var url = sessionStorage.getItem("reg");
 window.location.replace(url)
 }
 
+function subirP(){
+  document.body.scrollTop = 0;
+  document.documentElement.scrollTop = 0;
+}
+
 //administrador
 
 function crearAdmin(admin,tipo){

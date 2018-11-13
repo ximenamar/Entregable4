@@ -498,8 +498,8 @@ def verHisAse(request, tipo,prof):
     return render(request, "verHistorialAsesoria.html", contexto)
 
 def verHisFil(request, sel):
-    citaAlum = Historial.objects.values('alumno__nombre_alumno','razon','hora_inicio','hora_fin','dia','lugar','fecha').filter(alumno__nombre_alumno=sel).order_by('fecha')
-    citaDia = Historial.objects.values('alumno__nombre_alumno','razon','hora_inicio','hora_fin','dia','lugar','fecha').filter(dia=sel).order_by('fecha')
+    citaAlum = Historial.objects.values('alumno__nombre_alumno','razon','hora_inicio','hora_fin','dia','lugar','fecha').filter(alumno__nombre_alumno=sel).order_by('-fecha')
+    citaDia = Historial.objects.values('alumno__nombre_alumno','razon','hora_inicio','hora_fin','dia','lugar','fecha').filter(dia=sel).order_by('-fecha')
     noneAlum = citaAlum.count()
     noneDia = citaDia.count()
 
