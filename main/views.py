@@ -461,7 +461,7 @@ def verHisAse(request, tipo,prof):
 
     contexto = {
         "lista_citas": cita,
-        "filtrado": selVer
+        "filtrado": selVer,
         "no": noEx
      }
     return render(request, "verHistorialAsesoria.html", contexto)
