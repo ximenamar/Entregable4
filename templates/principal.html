@@ -26,6 +26,9 @@
     <p onclick="get_url('{{user.first_name}}')"><a href="{% url 'main:busqueda1' %}" >Búsqueda de Asesoría por Filtros</a></p>
     <p onclick="get_url('{{user.first_name}}')"><a href="{% url 'main:busqueda2' %}">Búsqueda de Asesoría por Etiquetas</a></p>
     </div>
+    <p><i class="fas fa-angle-down mb-4"></i> Búsqueda de Asesoría Múltiple</p>
+    <p onclick="get_url('{{user.first_name}}')"><a href="{% url 'main:busqueda1' %}" >Búsqueda de Asesoría por Filtros</a></p>
+    </div>
   <p><a href="{% url 'logout' %}">logout</a></p>
 
   {% else %}
