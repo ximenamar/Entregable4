@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'baseScroll.html' %}
 
 {% block content %}
   {% if user.is_authenticated %}
@@ -15,7 +15,7 @@
 <input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{selImp}}">
 <br>
   {% endfor %}
-<div class="container" name="cita">
+<div style="padding:30px 30px" class="container" name="cita">
 
 <ul class="list-group" id="myList">
 
@@ -53,7 +53,7 @@
   </ul>
   <br>
   <div>
-  <button onclick="subirP()" class="btn btn-secondary btn-lg"> Subir</button>
+  <button onclick="subirP()" id="myBtn" class="btn btn-secondary btn-lg"> Subir</button>
   </div>
 </div>
 <script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp
@@ -65,6 +65,16 @@ $(document).ready(function(){
     });
   });
 });
+// When the user scrolls down 20px from the top of the document, show the button
+window.onscroll = function() {scrollFunction()};
+
+function scrollFunction() {
+    if (document.body.scrollTop > 20 || document.documentElement.scrollTop > 20) {
+        document.getElementById("myBtn").style.display = "block";
+    } else {
+        document.getElementById("myBtn").style.display = "none";
+    }
+}
 </script>
   {% else %}
     <p>No haz iniciado sesión.</p>
