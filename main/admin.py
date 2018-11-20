@@ -10,7 +10,7 @@ admin.site.register(Alumno)
 
 admin.site.register(Cita_Simple)
 
-admin.site.register(Cita_Multiple)
+admin.site.register(Asesoria_Multiple)
 
 admin.site.register(Etiqueta)
 

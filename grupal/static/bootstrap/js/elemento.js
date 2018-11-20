@@ -60,7 +60,30 @@ if (ini==2) {
   })
   sessionStorage.setItem("ini",1);
 }
+}
 
+function aseRM(user,tipo, asesoria){
+var ini = sessionStorage.getItem("ini");
+if (ini==2) {
+  const inicio = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  });
+  inicio({
+    type: 'success',
+
+    title: 'Asesoría reservada, '+tipo+' '+user
+  }).then((result) => {
+    if (result.dismiss === swal.DismissReason.timer) {
+      var url = sessionStorage.getItem("urlProf");
+      var url = url + "verMul/"+user;
+      window.location.replace(url);
+    }
+  })
+  sessionStorage.setItem("ini",1);
+}
 }
 
 //Alumno
@@ -124,6 +147,12 @@ var url = url +"busqueda2/";
 window.location.replace(url);
 }
 
+function regresarMul(dia){
+  var url = sessionStorage.getItem("reg");
+  var url = url + dia;
+  window.location.replace(url);
+}
+
 function get_url(usu){
 let usuario = usu
 let url = window.location.href;
@@ -139,6 +168,17 @@ let url = window.location.href;
 sessionStorage.setItem("busq1", url);
 sessionStorage.setItem("usu", usuario);
 var elementos = "ver/"+ usuario;
+var ver = sessionStorage.getItem("busq1");
+var ver = url + elementos ;
+window.location.replace(ver);
+}
+
+function get_usuM(usu){
+let usuario = usu
+let url = window.location.href;
+sessionStorage.setItem("busq1", url);
+sessionStorage.setItem("usu", usuario);
+var elementos = "verMul/"+ usuario;
 var ver = sessionStorage.getItem("busq1");
 var ver = url + elementos ;
 window.location.replace(ver);
@@ -228,6 +268,71 @@ sessionStorage.setItem("bd", busqueda);
 console.log(busqueda)
 }
 
+//Obtiene lo demás
+$(':checkbox').change(function(){
+    var liste2 = $(':checkbox:checked').map(function() {
+    return this.id;
+}).get();
+    if (liste2.length == 2) {
+      var url = liste2[0]
+      sessionStorage.setItem("bd", url);
+    }
+});
+//Obtiene los nombres del profesor
+$(':checkbox').change(function(){
+    var liste2 = $(':checkbox:checked').map(function() {
+    return this.value;
+}).get();
+    if (liste2.length == 2) {
+      var prof1 = liste2[0]
+      var prof2 = liste2[1]
+      var url = sessionStorage.getItem("bd");
+      var url = prof1 +'/'+prof2 +'/'+ url
+      sessionStorage.setItem("bd", url);
+    }
+});
+
+function obtener_citaM(){
+
+  sessionStorage.setItem("ini",2);
+  var no = [];
+  var or = document.getElementById("no");
+  no.push(or);
+  var url = sessionStorage.getItem("bd");
+  if (no[0] != null) {
+    swal("¡Error!", 'No existen profesores', "error");
+  }else if (url != "#" ){
+    getRazon();
+  }else{
+    swal("¡Espere!", 'Porfavor seleccione dos profesores', "warning");
+  }
+
+
+}
+
+function getRazon(){
+  var razon = ""
+  var reusar = "#"
+  swal({
+    title: '¿Cuál es la razón de esta asesoría?',
+    input: 'text',
+    showCancelButton: true,
+    inputValidator: (value) => {
+      return !value && '¡Porfavor Escriba una razón!'
+    }
+  }).then((result) => {
+  if (result.value) {
+    var razon = result.value
+    var urlBase = sessionStorage.getItem("urlProf");
+    var url = sessionStorage.getItem("bd");
+    var urlBase = urlBase +'asesoriaMul/'+ url +'/'+razon
+    sessionStorage.setItem("bd",reusar)
+    window.location.replace(urlBase)
+  }
+})
+
+}
+
 function restaurarBD(){
   var reusar = "#"
   sessionStorage.setItem("bd",reusar)
@@ -280,6 +385,12 @@ function retornar(alumn){
   window.location.replace(url);
 }
 
+function retornarM(alumn){
+  var url = sessionStorage.getItem("busq1");
+  var url = url + "verMul"+"/"+alumn;
+  window.location.replace(url);
+}
+
 function reservaCancel(asesoria){
 aseCancel = asesoria
 var url = sessionStorage.getItem("busq1");
@@ -319,6 +430,53 @@ swalWithBootstrapButtons({
   } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
     swalWithBootstrapButtons(
       '¡No se ha borrado la cita!',
+      '',
+      'info'
+    )
+  }
+})
+
+}
+
+function reservaCancelPenMul(asesoria){
+aseCancel = asesoria.asesoria
+var url = sessionStorage.getItem("busq1");
+var alum = sessionStorage.getItem("usu");
+const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#3085d6',
+  allowOutsideClick: true,
+})
+
+swalWithBootstrapButtons({
+  title: '¿Está seguro?',
+  text: "Se va a cancelar la cita múltiple",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Sí, ¡Cancélala!',
+  cancelButtonText: 'No',
+  reverseButtons: true
+}).then((result) => {
+  if (result.value) {
+    $.get('/principal/asesoriaMul/ver/cancelar/'+aseCancel ,function(){
+      swalWithBootstrapButtons({
+        title: '¡Se ha borrado la cita múltiple!',
+        type: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'ok'
+      }).then((result) => {
+        if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+          var url = sessionStorage.getItem("busq1");
+          var url = url + "verMul"+"/"+alum;
+          window.location.replace(url);
+        }
+      })
+    })
+  } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+    swalWithBootstrapButtons(
+      '¡No se ha borrado la cita múltiple!',
       '',
       'info'
     )
@@ -374,6 +532,7 @@ swalWithBootstrapButtons({
 
 }
 
+
 function reservaReAceptar(asesoria){
 aseReCrear = asesoria.asesoria
 var url = sessionStorage.getItem("busq1");
@@ -420,6 +579,52 @@ swalWithBootstrapButtons({
 })
 }
 
+function reservaReAceptarMul(asesoria){
+aseReCrear = asesoria.asesoria
+var url = sessionStorage.getItem("busq1");
+
+const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#3085d6',
+  allowOutsideClick: true,
+})
+
+swalWithBootstrapButtons({
+  title: '¿Está seguro?',
+  text: "Se va a reenviar la cita múltiple",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Sí, ¡Pídela!',
+  cancelButtonText: 'No',
+  reverseButtons: true
+}).then((result) => {
+  if (result.value) {
+    $.get('/principal/asesoriaMul/'+aseReCrear,function(){
+      swalWithBootstrapButtons({
+        title: '¡Se ha pedido la reserva de la cita múltiple nuevamente!',
+        type: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'ok'
+      }).then((result) => {
+        if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+          var url = sessionStorage.getItem("busq1");
+          var url = url + "verMul"+"/"+asesoria.alumno__nombre_alumno;
+          window.location.replace(url);
+        }
+      })
+    })
+  } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+    swalWithBootstrapButtons(
+      '¡No se ha reenviado la cita múltiple!',
+      '',
+      'info'
+    )
+  }
+})
+}
+
 function mostrarAsesoria(asesoria){
 var ver = sessionStorage.getItem("busq1");
 if (asesoria.estado == "pendiente a aceptar"){
@@ -435,6 +640,34 @@ window.location.replace(ver);
 
 }
 
+function mostrarAsesoriaM(asesoria,prof){
+var ver = sessionStorage.getItem("busq1");
+if (asesoria.estado == "pendiente a aceptar"){
+  var elementos = "asesoriaMul/ver/sinAceptar/"+asesoria.profesor_uno__nombre_profesor+"/"+asesoria.profesor_dos__nombre_profesor+"/"+asesoria.alumno__nombre_alumno+"/"+asesoria.dia+"/"+asesoria.lugar+"/"+asesoria.hora_inicio+"/"+asesoria.hora_fin+"/"+asesoria.estado;
+
+}else if (asesoria.estado == "aceptada" ) {
+  var elementos = "asesoriaMul/ver/aceptado/"+asesoria.profesor_uno__nombre_profesor+"/"+asesoria.profesor_dos__nombre_profesor+"/"+asesoria.alumno__nombre_alumno+"/"+asesoria.dia+"/"+asesoria.lugar+"/"+asesoria.hora_inicio+"/"+asesoria.hora_fin+"/"+asesoria.estado;
+}else {
+  var elementos = "asesoriaMul/"+asesoria.profesor_uno__nombre_profesor+asesoria.profesor_dos__nombre_profesor+asesoria.alumno__nombre_alumno+asesoria.dia+'/'+prof;
+}
+var ver = ver + elementos ;
+window.location.replace(ver);
+}
+
+function mostrarAseMulti(dia){
+let main = window.location.href;
+sessionStorage.setItem("reg",main);
+var ver = sessionStorage.getItem("reg");
+var ver = ver + dia;
+window.location.replace(ver);
+}
+
+function mostrarAseMultiHora(horas,selDia){
+  var ver = sessionStorage.getItem("reg");
+  var usuario = sessionStorage.getItem("usu");
+  var ver = ver + selDia +'/'+ horas.hora_inicio+'/'+horas.hora_fin+'/'+usuario;
+  window.location.replace(ver);
+}
 //Profesor
 
 function get_prof(prof){
@@ -487,6 +720,17 @@ var ver = ver + elementos ;
 window.location.replace(ver);
 }
 
+function mostrarAsesoriaProfMul(asesoria){
+var ver = sessionStorage.getItem("busq1");
+if (asesoria.estado == "pendiente a aceptar") {
+  var elementos = "asesoriaMul/"+asesoria.profesor_uno__nombre_profesor+"/"+asesoria.profesor_dos__nombre_profesor+"/"+asesoria.alumno__nombre_alumno+"/"+asesoria.dia+"/"+asesoria.lugar+"/"+asesoria.hora_inicio+"/"+asesoria.hora_fin+"/"+asesoria.razon;
+}else {
+  var elementos = "asesoriaMul/noaceptar/"+asesoria.profesor_uno__nombre_profesor+asesoria.profesor_dos__nombre_profesor+asesoria.alumno__nombre_alumno+asesoria.dia;
+}
+var ver = ver + elementos ;
+window.location.replace(ver);
+}
+
 function reservaAceptar(asesoria){
 aseAceptar = asesoria.asesoria;
 alum = asesoria.alumno__nombre_alumno;
@@ -532,7 +776,111 @@ swalWithBootstrapButtons({
     )
   }
 })
+}
 
+function reservaAceptarMul(asesoria, profesor){
+aseAceptar = asesoria.asesoria;
+console.log(asesoria.estado2);
+alum = asesoria.alumno__nombre_alumno;
+var url = sessionStorage.getItem("busq1");
+console.log(alum);
+const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#3085d6',
+  allowOutsideClick: true,
+})
+
+if (asesoria.estado2 == profesor) {
+  swal({
+  title: 'Usted ya ha aceptado esta cita múltiple',
+  text: "Espere que el profesor faltante la acepte",
+  type: 'info',
+  })
+}else {
+  swalWithBootstrapButtons({
+    title: '¿Está seguro sobre aceptar?',
+    text: "Se va a aceptar la cita múltiple con el alumno",
+    type: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'Sí, ¡Acéptala!',
+    cancelButtonText: 'No',
+    reverseButtons: true
+  }).then((result) => {
+    if (result.value) {
+      $.get('/principal/p/asesoriaMul/aceptar/'+aseAceptar+'/'+profesor,function(){
+        swalWithBootstrapButtons({
+          title: '¡Se ha aceptado la cita múltiple!',
+          type: 'success',
+          confirmButtonColor: '#3085d6',
+          confirmButtonText: 'ok'
+        }).then((result) => {
+          if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+  	        var url = sessionStorage.getItem("busq1");
+            var url = url + "verMul"+"/"+profesor;
+            window.location.replace(url);
+          }
+        })
+      })
+    } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+      swalWithBootstrapButtons(
+        '¡No se ha aceptado la cita múltiple!',
+        '',
+        'info'
+      )
+    }
+  })
+}
+
+
+
+}
+
+function reservaNoAceptarMul(asesoria, prof){
+aseNoAceptar = asesoria.asesoria
+var url = sessionStorage.getItem("busq1");
+
+const swalWithBootstrapButtons = swal.mixin({
+  confirmButtonClass: 'btn btn-success',
+  cancelButtonClass: 'btn btn-danger',
+  confirmButtonColor: '#d33',
+  cancelButtonColor: '#3085d6',
+  allowOutsideClick: true,
+})
+
+swalWithBootstrapButtons({
+  title: '¿Está seguro sobre no aceptar?',
+  text: "Se va a eliminar la asesoría múltiple aceptada con el alumno y profesor",
+  type: 'warning',
+  showCancelButton: true,
+  confirmButtonText: 'Sí, ¡No lo aceptes!',
+  cancelButtonText: 'No',
+  reverseButtons: true
+}).then((result) => {
+  if (result.value) {
+    $.get('/principal/p/asesoriaMul/noaceptarMul/'+aseNoAceptar,function(){
+      swalWithBootstrapButtons({
+        title: '¡Se ha eliminado lo aceptado!',
+        type: 'success',
+        confirmButtonColor: '#3085d6',
+        confirmButtonText: 'ok'
+      }).then((result) => {
+        if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+	  var url = sessionStorage.getItem("busq1");
+          var url = url + "verMul"+"/"+prof;
+          window.location.replace(url);
+        }
+      })
+    })
+  } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+    swalWithBootstrapButtons(
+      '¡Se sigue aceptando la cita múltiple!',
+      '',
+      'info'
+    )
+  }
+})
 }
 
 function reservaNoAceptar(asesoria){
@@ -584,6 +932,12 @@ swalWithBootstrapButtons({
 function regresar(prof){
   var url = sessionStorage.getItem("busq1");
   var url = url + "ver"+"/"+prof;
+  window.location.replace(url);
+}
+
+function regresar(prof){
+  var url = sessionStorage.getItem("busq1");
+  var url = url + "verMul"+"/"+prof;
   window.location.replace(url);
 }
 
@@ -663,6 +1017,73 @@ if (hora < hAse ||asesoria.dia != dia) {
   })
 }
 
+}
+
+function reservaMarcarMul(asesoria, prof){
+
+aseAcept = asesoria.asesoria;
+var d = new Date();
+var dias = ["Viernes","Lunes","Martes","Miércoles","Jueves"];
+var dia = dias[d.getDay()];
+var hora = d.getHours();
+var hAse = asesoria.hora_fin.split(/(1[0-2]|0?[0-9])/)[1];
+var meriAse = asesoria.hora_fin.split(/(1[0-2]|0?[0-9])/)[2];
+
+if (meriAse == "pm") {
+  var hAse = parseInt(hAse) + 12
+}
+
+if (asesoria.estado3 == prof ) {
+  swal(
+    '¡Esta asesoría múltiple ya está marcado como atendida por usted!',
+    '',
+    'info'
+  )
+}else {
+  if (hora < hAse ||asesoria.dia != dia) {
+    swal("¡Espere, profesor!", 'No se puede marcar como atendida una asesoría que aún no termina', "warning");
+  }else{
+    const swalWithBootstrapButtons = swal.mixin({
+      confirmButtonClass: 'btn btn-success',
+      cancelButtonClass: 'btn btn-danger',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      allowOutsideClick: true,
+    })
+    swalWithBootstrapButtons({
+      title: '¿Está seguro?',
+      text: "Se va a marcar como atendida esta asesoría",
+      type: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, ¡Márcalo!',
+      cancelButtonText: 'No',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.value) {
+        $.get('/principal/p/asesoriaMul/atendido/'+aseAcept+'/'+prof+'/'+asesoria.alumno__nombre_alumno+'/'+asesoria.dia+'/'+asesoria.lugar+'/'+asesoria.hora_inicio+'/'+asesoria.hora_fin+'/'+asesoria.razon,function(){
+          swalWithBootstrapButtons({
+            title: '¡Se ha marcado como atendido la asesoría!',
+            type: 'success',
+            confirmButtonColor: '#3085d6',
+            confirmButtonText: 'ok'
+          }).then((result) => {
+            if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.acept) {
+    	  var url = sessionStorage.getItem("busq1");
+              var url = url + "verMul"+"/"+prof;
+              window.location.replace(url);
+            }
+          })
+        })
+      } else if (result.dismiss === swal.DismissReason.backdrop ||result.dismiss === swal.DismissReason.cancel) {
+        swalWithBootstrapButtons(
+          '¡No se ha marcado como atendida la asesoría!',
+          '',
+          'info'
+        )
+      }
+    })
+  }
+}
 
 }
 
@@ -694,6 +1115,12 @@ window.location.replace(url)
 function  regresarP(){
 var url = sessionStorage.getItem("reg");
 window.location.replace(url)
+}
+
+function  regresarPM(prof){
+  var url = sessionStorage.getItem("busq1");
+  var url = url + "verMul"+"/"+prof;
+  window.location.replace(url);
 }
 
 function subirP(){
@@ -815,6 +1242,8 @@ if (profesor == "Profesor" || inicio == "" || fin == "" || dia == "Elige un día
   swal("¡Espere, administrador!", 'Porfavor escriba un intervalo de hora valida', "warning");
 }else if (inicio == fin) {
   swal("¡Espere, administrador!", 'Porfavor elija horas distintas', "warning");
+}else if ((iniNum == '11' && iniMeri == 'am')&& (finNum == '12' && finMeri == 'pm')) {
+  swal("¡Espere, administrador!", 'Es hora del descanso', "warning");
 }else if (rest != 1) {
   swal("¡Imposible, administrador!", 'Un profesor solo debe de tener asesorías por una hora', "warning");
 }else if ((iniNum == '1' && iniMeri == 'pm')&& (finNum == '2' && finMeri == 'pm')) {

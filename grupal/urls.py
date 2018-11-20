@@ -23,6 +23,13 @@ urlpatterns = [
     path('principal/p/guardarProf/<str:prof>', views.crearProf , name='reserva'),
     path('principal/p/verHistorial/<str:tipo>/<str:prof>', views.verHisAse , name='modificar'),
     path('principal/p/historial/ver/<str:sel>', views.verHisFil , name='modificar'),
+    path('principal/p/verMul/<str:prof>', views.verProfMul , name='verMul'),
+    path('principal/p/asesoriaMul/<str:prof1>/<str:prof2>/<str:alum>/<str:dia>/<str:lugar>/<str:inicio>/<str:fin>/<str:razon>', views.citaReservadaProfMul , name='citaProfVer'),
+    path('principal/p/asesoriaMul/noaceptar/<str:asesoria>', views.citaReservadaProfCancelMul , name='citaProfCancel'),
+    path('principal/p/asesoriaMul/aceptar/<str:asesoria>/<str:prof>', views.citaAceptarMul , name='reserva'),
+    path('principal/p/asesoriaMul/noaceptarMul/<str:asesoria>', views.citaNoAceptarMul , name='reserva'),
+    path('principal/p/asesoriaMul/atendido/<str:asesoria>/<str:prof>/<str:alum>/<str:dia>/<str:lugar>/<str:inicio>/<str:fin>/<str:razon>', views.citaAtendidaMul , name='marcarMul'),
+
     #administrador
     path('principal/a/', TemplateView.as_view(template_name='principala.html')),
     path('principal/a/guardarAdmin/<str:admin>', views.crearAdmin , name='administrador'),

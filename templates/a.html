@@ -14,7 +14,7 @@
 
     // Enable pusher logging - don't include this in production
     //Pusher.logToConsole = true;
-
+   //Notificaiones al alumno de una asesoria simple desde el profesor
     var pusher = new Pusher('088d8d55c84743f48c36', {
       cluster: 'us2',
       forceTLS: true
@@ -70,6 +70,63 @@
         })
       }
     });
+
+    //Notificaiones al alumno de una asesoria multiple desde el profesor
+     var pusher = new Pusher('73e158ad0bb9df83fad2', {
+       cluster: 'us2',
+       forceTLS: true
+     });
+
+     var channel = pusher.subscribe('my-channel');
+     channel.bind('my-event', function(data) {
+       var usuario = sessionStorage.getItem("usu");
+       const inicio = swal.mixin({
+         toast: true,
+         position: 'top-end',
+         showConfirmButton: true,
+         confirmButtonText: 'Ver',
+         confirmButtonColor:'#9BDE87',
+         showCloseButton:true,
+         timer: 7000
+
+       });
+       if (usuario == data.alumno__nombre_alumno && data.estado == 'aceptada' && data.estado3 == "nada") {
+         inicio({
+           type: 'success',
+           title: 'Los profesores '+data.profesor_uno__nombre_profesor+' y '+data.profesor_dos__nombre_profesor+' han aceptado una asesoría múltiple, '+data.alumno__nombre_alumno
+         }).then((result) => {
+           if (result.value) {
+             var url = sessionStorage.getItem("urlProf");
+             var url = url + "asesoriaMul/ver/aceptado/"+data.profesor_uno__nombre_profesor+"/"+data.profesor_dos__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.estado;
+             window.location.replace(url);
+           }
+         })
+       }else if (usuario == data.alumno__nombre_alumno && data.estado == 'Cancelada') {
+         inicio({
+           confirmButtonColor: '#EA0108',
+           type: 'error',
+           title: 'Los profesores '+data.profesor_uno__nombre_profesor+' y '+data.profesor_dos__nombre_profesor+' han cancelado una asesoría múltiple, '+data.alumno__nombre_alumno
+         }).then((result) => {
+           if (result.value) {
+             var url = sessionStorage.getItem("urlProf");
+             var url = url + "asesoriaMul/"+data.profesor_uno__nombre_profesor+data.profesor_dos__nombre_profesor+data.alumno__nombre_alumno+data.dia+"/"+data.alumno__nombre_alumno;
+             window.location.replace(url);
+           }
+         })
+       }else if (usuario == data.alumno__nombre_alumno && data.estado == 'marcado') {
+         inicio({
+           confirmButtonColor: '#EA0108',
+           type: 'info',
+           title: 'Los profesores '+data.profesor_uno__nombre_profesor+' y '+data.profesor_dos__nombre_profesor+' han marcado una asesoría múltiple como atendida, '+data.alumno__nombre_alumno
+         }).then((result) => {
+           if (result.value) {
+             var url = sessionStorage.getItem("urlProf");
+             var url = url + "verMul/"+data.alumno__nombre_alumno;
+             window.location.replace(url);
+           }
+         })
+       }
+     });
   </script>
 </head>
 <body>

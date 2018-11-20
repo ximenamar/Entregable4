@@ -1,0 +1,33 @@
+{% extends 'a2.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  <h1><center class="mt-5 mb-5">Citas Múltiples Reservadas</center></h1>
+<div class="container" name="cita">
+    {% for imprimir in noAse %}
+    <p>{{imprimir}}
+    <button onclick="inicio()" class="btn btn-secondary"> Realizar búsqueda </button></p>
+    {% endfor %}
+    {% for asesoria in lista_asesorias %}
+    <br>
+    <span>
+    <li class="list-group-item" id="asesoria">
+    <p>
+    <p>Día: {{ asesoria.dia}}</p>
+    Profesores: {{ asesoria.profesor_uno__nombre_profesor}} y {{ asesoria.profesor_dos__nombre_profesor}}
+    <button onclick="mostrarAsesoriaM({{asesoria}},'{{user.first_name}}')" class="btn btn-secondary btn-lg">Ver</button>
+    </p>
+    <p> Estado: {{ asesoria.estado}}</p>
+    </li>
+    </span>
+    </br>
+    {% endfor %}
+    <br>
+    <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+    </br>
+</div>
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

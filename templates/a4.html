@@ -14,7 +14,7 @@
 
     // Enable pusher logging - don't include this in production
     //Pusher.logToConsole = true;
-
+    //Para notificaciones de asesorías simples creadas por el alumno
     var pusher = new Pusher('25d751d0250a1bbbf28b', {
       cluster: 'us2',
       forceTLS: true
@@ -60,6 +60,164 @@
         })
       }
     });
+
+    //Para asesorías múltiples creadas por el alumno
+    var pusher = new Pusher('d8a1808870a3d4007260', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+
+      const inicio = swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: true,
+        confirmButtonText: 'Ver',
+        confirmButtonColor:'#9BDE87',
+        showCloseButton:true,
+        timer: 7000
+
+      });
+      if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && data.estado == 'pendiente a aceptar') {
+        inicio({
+          type: 'success',
+          title: 'El alumno '+data.alumno__nombre_alumno+' ha reservado una asesoría múltiple, '+usuario
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("busq1");
+            var url = url + "asesoriaMul/"+data.profesor_uno__nombre_profesor+"/"+data.profesor_dos__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.razon;
+            window.location.replace(url);
+          }
+        })
+      }else if ((usuario == data['prof1'] || usuario == data['prof2']) && data.estatus == '0') {
+        console.log(data);
+        inicio({
+          confirmButtonColor: '#EA0108',
+          type: 'error',
+          title: 'El alumno '+data['alum']+' ha eliminado una asesoría múltiple, '+ usuario
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("busq1");
+            var url = url + "verMul/"+usuario;
+            window.location.replace(url);
+          }
+        })
+      }
+    });
+
+    //Para notificaciones del profesor cuando el otro porfe hace un cambio a una asesoria multiples
+    var pusher = new Pusher('e6c21365f0ce01bcf6bd', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+
+      const inicio = swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: true,
+        confirmButtonText: 'Ver',
+        confirmButtonColor:'#9BDE87',
+        showCloseButton:true,
+        timer: 7000
+
+      });
+      if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && data.mensaje != 'nada' && usuario != data.estado2) {
+        inicio({
+          type: 'success',
+          title: 'Un profesor ha pedido que acepte usted una asesoría múltiple, '+usuario
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("busq1");
+            var url = url + "asesoriaMul/"+data.profesor_uno__nombre_profesor+"/"+data.profesor_dos__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.razon;
+            window.location.replace(url);
+          }
+        })
+      }else if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && data.mensaje != 'nada' && usuario == data.estado2 && data.estado == "aceptada") {
+        inicio({
+          type: 'success',
+          title: 'Se ha aceptado la asesoría múltiple, '+usuario
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("busq1");
+            var url = url + "asesoriaMul/"+data.profesor_uno__nombre_profesor+"/"+data.profesor_dos__nombre_profesor+"/"+data.alumno__nombre_alumno+"/"+data.dia+"/"+data.lugar+"/"+data.hora_inicio+"/"+data.hora_fin+"/"+data.razon;
+            window.location.replace(url);
+          }
+        })
+      }
+    });
+
+  //Notifica al profesor que otro profesor no acpeto la asesoria multiple
+  var pusher = new Pusher('5854bf79ddfcd99309b0', {
+    cluster: 'us2',
+    forceTLS: true
+  });
+  var channel = pusher.subscribe('my-channel');
+  channel.bind('my-event', function(data) {
+    var usuario = sessionStorage.getItem("usu");
+
+    const inicio = swal.mixin({
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: true,
+      confirmButtonText: 'Ver',
+      confirmButtonColor:'#9BDE87',
+      showCloseButton:true,
+      timer: 7000
+
+    });
+      if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && data.estado == "Cancelada") {
+        inicio({
+          type: 'error',
+          title: 'Un profesor no ha aceptado la asesoría múltiple, '+usuario
+        }).then((result) => {
+          if (result.value) {
+            var url = sessionStorage.getItem("busq1");
+            var url = url + "verMul/"+usuario;
+            window.location.replace(url);
+          }
+        })
+      }
+
+    });
+    //Notifica al profesor que marque la asesoría multiple cuando el otro lo hace
+    var pusher = new Pusher('753b74e98fa54eeb6bb8', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+
+      const inicio = swal.mixin({
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: true,
+        confirmButtonText: 'Ver',
+        confirmButtonColor:'#9BDE87',
+        showCloseButton:true,
+        timer: 7000
+
+      });
+        if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && usuario != data.estado3) {
+          inicio({
+            type: 'info',
+            title: 'No te olvides marcar la asesoría múltiple, '+usuario
+          }).then((result) => {
+            if (result.value) {
+              var url = sessionStorage.getItem("busq1");
+              var url = url + "verMul/"+usuario;
+              window.location.replace(url);
+            }
+          })
+        }
+
+      });
   </script>
 </head>
 <body>

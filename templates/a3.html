@@ -14,7 +14,7 @@
 
     // Enable pusher logging - don't include this in production
     //Pusher.logToConsole = true;
-
+  //actualiza la vista para las asesorías simples
     var pusher = new Pusher('2294181343cebed3aeea', {
       cluster: 'us2',
       forceTLS: true
@@ -29,6 +29,23 @@
 
       }
     );
+
+    //actualiza la vista para las asesorías múltiples
+      var pusher = new Pusher('a52822b55fd67e542bd1', {
+        cluster: 'us2',
+        forceTLS: true
+      });
+
+      var channel = pusher.subscribe('my-channel');
+      channel.bind('my-event', function(data) {
+        var usuario = sessionStorage.getItem("usu");
+        if (usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor ) {
+          location.reload();
+        }
+
+        }
+      );
+
   </script>
 </head>
 <body>

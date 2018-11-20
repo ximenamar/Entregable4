@@ -14,7 +14,7 @@
 
     // Enable pusher logging - don't include this in production
     //Pusher.logToConsole = true;
-
+    //retrocede de la pagina de detalles a la pagina de asesoria simple del profesor
     var pusher = new Pusher('7a7e9159031b98a76d93', {
       cluster: 'us2',
       forceTLS: true
@@ -31,6 +31,107 @@
 
       }
     );
+
+    //retrocede de la pagina de detalles a la pagina de asesoria múltiple del profesor
+    var pusher = new Pusher('bfd2a41b86394aa0eaa4', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+      if (usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor ) {
+        var url = sessionStorage.getItem("busq1");
+        var url = url + "ver/"+usuario;
+        window.location.replace(url);
+      }
+
+      }
+    );
+
+    //retrocede de la pagina de detalles a la pagina de asesoria múltiple del profesor cuando otro porfesor acepta
+    var pusher = new Pusher('ff9c9365a383f65c66a0', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+      if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && data.estado=="pendiente a aceptar" && usuario != data.estado2) {
+        var url = sessionStorage.getItem("busq1");
+        var url = url + "verMul/"+usuario;
+        window.location.replace(url);
+      }else if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && data.estado=="aceptada" && usuario == data.estado2) {
+
+        $(document).ready(function () {
+        // Handler for .ready() called.
+        window.setTimeout(function () {
+          var url = sessionStorage.getItem("busq1");
+          var url = url + "verMul/"+usuario;
+          window.location.replace(url);
+        }, 2000);
+        });
+
+      }
+
+      }
+    );
+
+    //retrocede de la pagina de detalles a la pagina de asesoria múltiple del profesor cuando un profesor no acepta
+    var pusher = new Pusher('c5c645f25c3aa7ee58de', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+      if (usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor ) {
+        $(document).ready(function () {
+        // Handler for .ready() called.
+        window.setTimeout(function () {
+          var url = sessionStorage.getItem("busq1");
+          var url = url + "verMul/"+usuario;
+          window.location.replace(url);
+        }, 2000);
+        });
+      }
+
+      }
+    );
+
+    //retrocede de la pagina de detalles a la pagina de asesoria múltiple del profesor cuando otro porfesor marca
+    var pusher = new Pusher('8727adc639d7ffc412bc', {
+      cluster: 'us2',
+      forceTLS: true
+    });
+
+    var channel = pusher.subscribe('my-channel');
+    channel.bind('my-event', function(data) {
+      var usuario = sessionStorage.getItem("usu");
+      if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && data.estado=="aceptada" && usuario != data.estado3) {
+        var url = sessionStorage.getItem("busq1");
+        var url = url + "verMul/"+usuario;
+        window.location.replace(url);
+      }else if ((usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor) && usuario == data.estado3) {
+
+        $(document).ready(function () {
+        // Handler for .ready() called.
+        window.setTimeout(function () {
+          var url = sessionStorage.getItem("busq1");
+          var url = url + "verMul/"+usuario;
+          window.location.replace(url);
+        }, 2000);
+        });
+
+      }
+
+      }
+    );
+
+
   </script>
 </head>
 <body>

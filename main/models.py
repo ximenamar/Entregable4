@@ -25,17 +25,22 @@ class Cita_Simple(models.Model):
     def __str__(self):
         return self.codigo_simple
 
-class Cita_Multiple(models.Model):
+class Asesoria_Multiple(models.Model):
+    asesoria = models.CharField(max_length=200, default='AsesoriaM')
     profesor_uno = models.ForeignKey(Profesor, related_name='profesor_uno' ,on_delete=models.CASCADE)
     profesor_dos = models.ForeignKey(Profesor, related_name='profesor_dos' ,on_delete=models.CASCADE)
-    codigo_multiple = models.CharField(max_length=200, default='CitaM')
+    alumno = models.ForeignKey(Alumno, on_delete=models.CASCADE)
     hora_inicio = models.CharField(max_length=200)
     hora_fin = models.CharField(max_length=200)
     dia = models.CharField(max_length=200)
     razon = models.CharField(max_length=200)
     lugar = models.CharField(max_length=200)
+    estado = models. CharField(max_length=200, null=True)
+    estado2 = models. CharField(max_length=200, null=True)
+    mensaje = models. CharField(max_length=200, null=True)
+    estado3 = models. CharField(max_length=200, null=True)
     def __str__(self):
-        return self.codigo_multiple
+        return self.asesoria
 
 class Etiqueta(models.Model):
     profesor = models.ForeignKey(Profesor, on_delete=models.CASCADE)

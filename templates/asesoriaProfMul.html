@@ -1,0 +1,41 @@
+{% extends 'a6.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+  {% for asesoria in asesoria_sel %}
+  <h1><center class="mt-5 mb-5">{{user.first_name}}, esta reserva múltiple está {{asesoria.mensaje}}</center></h1>
+
+<div class="container">
+    <li class="list-group-item" id="horaio">
+    <p>
+      Profesores: {{asesoria.profesor_uno__nombre_profesor}} y {{asesoria.profesor_dos__nombre_profesor}}
+    </p>
+    <p>
+      Alumno: {{asesoria.alumno__nombre_alumno}}
+    </p>
+    <p>
+      Dia: {{asesoria.dia}}
+    </p>
+    <p>
+      Lugar: {{asesoria.lugar}}
+    </p>
+    <p>
+      Hora: {{asesoria.hora_inicio}} - {{asesoria.hora_fin}}
+    </p>
+    <p>
+      Razón: {{asesoria.razon}}
+    </p>
+    </li>
+
+<br>
+<button onclick="reservaAceptarMul({{asesoria}},'{{user.first_name}}')" class="btn btn-secondary btn-lg">Aceptar </button>
+<button onclick="regresarPM('{{user.first_name}}')" class="btn btn-secondary btn-lg"> Ver más citas múltiples </button>
+<button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+  {% endfor %}
+</div>
+
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+
+  <h1><center class="mt-5 mb-5">Búsqueda de Asesorías Multiples</center></h1>
+  {% for selVer in filtrado %}
+<input class="form-control" id="myInput" type="text" placeholder="Filtrar por {{ selVer}} ">
+<br>
+{% endfor %}
+{% for noEx in no %}
+{{noEx}}
+{% endfor %}
+<div class="container" name="cita">
+
+<ul class="list-group" id="myList">
+    {% for cita in lista_citas %}
+
+    <br>
+    <span>
+    <li class="list-group-item" id="horaio">
+    {{ cita.dia}}
+    <button onclick="mostrarAseMulti('{{cita.dia}}')" class="btn btn-secondary btn-lg">Ver Horas</button>
+    </li>
+    {% endfor %}
+    </span>
+    </br>
+  </ul>
+    <br>
+    <button onclick="inicio()" class="btn btn-secondary btn-lg"> Ir al inicio </button>
+
+
+</div>
+<script>//Recopilado de https://www.w3schools.com/bootstrap4/bootstrap_filters.asp
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myList li").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+  {% else %}
+    <p>No haz iniciado sesión.</p>
+    <a href="{% url 'login' %}">Iniciar Sesión</a>
+  {% endif %}
+{% endblock %}
