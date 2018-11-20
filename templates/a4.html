@@ -54,7 +54,7 @@
         }).then((result) => {
           if (result.value) {
             var url = sessionStorage.getItem("busq1");
-            var url = url + "ver/"+data.profesor__nombre_profesor;
+            var url = url + "ver/"+usuario;
             window.location.replace(url);
           }
         })
