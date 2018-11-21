@@ -935,7 +935,7 @@ function regresar(prof){
   window.location.replace(url);
 }
 
-function regresar(prof){
+function regresarM(prof){
   var url = sessionStorage.getItem("busq1");
   var url = url + "verMul"+"/"+prof;
   window.location.replace(url);
