@@ -43,7 +43,7 @@
       var usuario = sessionStorage.getItem("usu");
       if (usuario == data.profesor_uno__nombre_profesor || usuario == data.profesor_dos__nombre_profesor ) {
         var url = sessionStorage.getItem("busq1");
-        var url = url + "ver/"+usuario;
+        var url = url + "verMul/"+usuario;
         window.location.replace(url);
       }
 
