@@ -23,8 +23,9 @@
     <br>
     <span>
     <li class="list-group-item" id="horaio">
-    Asesorías desde las {{ cita.hora_inicio}} a las {{ cita.hora_fin}}
-    <button onclick="mostrarAseMultiHora({{cita}},'{{selDia}}')" class="btn btn-secondary btn-lg">Ver Horarios</button>
+    <p>Asesorías desde las {{ cita.hora_inicio}} a las {{ cita.hora_fin}}
+    <button style="float: right;" onclick="mostrarAseMultiHora({{cita}},'{{selDia}}')" class="btn btn-secondary btn-lg">Ver Horarios</button>
+    </p>
     </li>
     {% endfor %}
     {% endfor %}
